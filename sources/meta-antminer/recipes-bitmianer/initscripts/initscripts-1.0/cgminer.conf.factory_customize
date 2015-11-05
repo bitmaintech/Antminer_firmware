@@ -1,0 +1,27 @@
+{
+"pools" : [
+{
+"url" : "biscuitproxy.gawlabs.com:4445",
+"user" : "PROXY.SHA",
+"pass" : "x"
+},
+{
+"url" : "biscuitproxy2.gawlabs.com:4445",
+"user" : "PROXY.SHA",
+"pass" : "123"
+},
+{
+"url" : "50.31.149.57:3333",
+"user" : "antminer_1",
+"pass" : "123"
+}
+]
+,
+"api-listen" : true,
+"api-network" : true,
+"api-allow" : "W:0/0",
+"bitmain-nobeeper" : false,
+"bitmain-notempoverctrl" : false,
+"bitmain-freq" : "7:200:0782",
+"bitmain-voltage" : "0725"
+}

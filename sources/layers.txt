@@ -1,0 +1,7 @@
+bitbake,git://github.com/openembedded/bitbake.git,master,c47088a86fd8ad06c1810d04d9537c4cd01e8bef
+meta-angstrom,git://github.com/Angstrom-distribution/meta-angstrom,angstrom-v2013.06-yocto1.4,HEAD
+meta-openembedded,git://github.com/Angstrom-distribution/meta-oe.git,angstrom-staging-yocto1.4,HEAD
+meta-beagleboard,git://github.com/beagleboard/meta-beagleboard.git,dylan,HEAD
+meta-ti,git://github.com/Angstrom-distribution/meta-ti.git,angstrom-staging-yocto1.4,HEAD
+meta-linaro,git://github.com/Angstrom-distribution/meta-linaro.git,dylan,HEAD
+openembedded-core,git://github.com/Angstrom-distribution/oe-core.git,angstrom-staging-yocto1.4,HEAD

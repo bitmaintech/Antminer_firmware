@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="cache-control" content="no-cache" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/cascade.css" />
+<!--[if IE 6]><link rel="stylesheet" type="text/css" media="screen" href="/css/ie6.css" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" type="text/css" media="screen" href="/css/ie7.css" /><![endif]-->
+<!--[if IE 8]><link rel="stylesheet" type="text/css" media="screen" href="/css/ie8.css" /><![endif]-->
+<script type="text/javascript" src="/js/xhr.js"></script>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="/js/json2.min.js"></script>
+<script>
+function f_submit_reset() {
+	if(confirm('Really reset all changes?')) {
+		$("#cbi_body_cgminer_fieldset").hide();
+		$("#cbi_reset_cgminer_fieldset").show();
+		
+		setTimeout(function(){
+			window.location.href="http://192.168.1.99/index.html";
+		}, 90000);
+		
+		$.ajax({
+			url: '/cgi-bin/reset_conf.cgi',
+			type: 'GET',
+			dataType: 'json',
+			timeout: 30000,
+			cache: false,
+			data: {},
+			success: function(data) {
+			},
+			error: function() {
+			}
+		});
+	}
+}
+
+function f_submit_restore_exec() {
+	$.ajax({
+		url: '/cgi-bin/kill_cgminer.cgi',
+		type: 'GET',
+		dataType: 'text',
+		timeout: 30000,
+		cache: false,
+		data: {},
+		success: function(data) {
+		},
+		error: function() {
+		}
+	});
+	ant_restore_config_form.submit();
+}
+
+function f_submit_restore() {
+	if(confirm('Really restore configuration files?')) {
+		$("#cbi_body_cgminer_fieldset").hide();
+		$("#cbi_restore_cgminer_fieldset").show();
+		
+		setTimeout(function(){
+			f_submit_restore_exec();
+		}, 1000);
+	}
+}
+
+function f_submit_upgrade_exec() {
+	$.ajax({
+		url: '/cgi-bin/kill_cgminer.cgi',
+		type: 'GET',
+		dataType: 'text',
+		timeout: 30000,
+		cache: false,
+		data: {},
+		success: function(data) {
+		},
+		error: function() {
+		}
+	});
+	if(document.getElementById("ant_keep").checked) {
+		$("#ant_replace_firmware_form").attr("action", "/cgi-bin/upgrade.cgi");
+	} else {
+		$("#ant_replace_firmware_form").attr("action", "/cgi-bin/upgrade_clear.cgi");
+	}
+	ant_replace_firmware_form.submit();
+}
+
+function f_submit_upgrade() {
+	if(confirm('Really replace the running firmware?')) {
+		$("#cbi_body_cgminer_fieldset").hide();
+		$("#cbi_upgrade_cgminer_fieldset").show();
+		
+		setTimeout(function(){
+			f_submit_upgrade_exec();
+		}, 1000);
+	}
+}
+</script>
+<title>Ant Miner</title>
+</head>
+<body class="lang_en">
+	<p class="skiplink">
+		<span id="skiplink1"><a href="#navigation">Skip to navigation</a></span>
+		<span id="skiplink2"><a href="#content">Skip to content</a></span>
+	</p>
+	<div id="menubar">
+		<h2 class="navigation"><a id="navigation" name="navigation">Navigation</a></h2>
+		<div class="clear"></div>
+	</div>
+	<div id="menubar" style="background-color: #0a2b40;">
+		<div class="hostinfo" style="float: left; with: 500px;">
+			<img src="/images/antminer_logo.png" width="92" height="50" alt="" title="" border="0" />
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div id="maincontainer">
+		<div id="tabmenu">
+			<div class="tabmenu1">
+				<ul class="tabmenu l1">
+					<li class="tabmenu-item-status active"><a href="/index.html">System</a></li>
+					<li class="tabmenu-item-system"><a href="/cgi-bin/minerConfiguration.cgi">Miner Configuration</a></li>
+					<li class="tabmenu-item-network"><a href="/cgi-bin/minerStatus.cgi">Miner Status</a></li>
+					<li class="tabmenu-item-system"><a href="/network.html">Network</a></li>
+				</ul>
+				<br style="clear: both" />
+				<div class="tabmenu2">
+					<ul class="tabmenu l2">
+						<li class="tabmenu-item-system"><a href="/index.html">Overview</a></li>
+						<li class="tabmenu-item-system"><a href="/administration.html">Administration</a></li>
+						<li class="tabmenu-item-admin"><a href="/monitor.html">Monitor</a></li>
+						<li class="tabmenu-item-packages"><a href="/kernelLog.html">Kernel Log</a></li>
+						<li class="tabmenu-item-startup active"><a href="/upgrade.html">Upgrade</a></li>
+						<li class="tabmenu-item-crontab"><a href="/reboot.html">Reboot</a></li>
+					</ul>
+					<br style="clear: both" />
+				</div>
+			</div>
+		</div>
+		<div id="maincontent">
+			<noscript>
+				<div class="errorbox">
+					<strong>Java Script required!</strong><br /> You must enable Java Script in your browser or LuCI will not work properly.
+				</div>
+			</noscript>
+			<h2 style="padding-bottom:10px;"><a id="content" name="content">Upgrade</a></h2>
+			<fieldset class="cbi-section" id="cbi_reset_cgminer_fieldset" style="display:none">
+				<img src="/resources/icons/loading.gif" alt="Loading" style="vertical-align:middle" />
+				<span id="cbi-apply-cgminer-status">Reset to defaults ...<br />&nbsp;<br />(please wait for 90 seconds)</span>
+			</fieldset>
+			<fieldset class="cbi-section" id="cbi_restore_cgminer_fieldset" style="display:none">
+				<img src="/resources/icons/loading.gif" alt="Loading" style="vertical-align:middle" />
+				<span id="cbi-apply-cgminer-status">Upload restore file ...<br />&nbsp;<br />(please wait a minute)</span>
+			</fieldset>
+			<fieldset class="cbi-section" id="cbi_upgrade_cgminer_fieldset" style="display:none">
+				<img src="/resources/icons/loading.gif" alt="Loading" style="vertical-align:middle" />
+				<span id="cbi-apply-cgminer-status">Upload firmware image ...<br />&nbsp;<br />(please wait a minute)</span>
+			</fieldset>
+			<fieldset class="cbi-section" id="cbi_body_cgminer_fieldset" style="display:block">
+				<fieldset class="cbi-section">
+					<legend>Backup / Restore</legend>
+					<div class="cbi-section-descr">
+						Click &#34;Generate archive&#34; to download a tar archive of the current configuration files. To reset the firmware to its initial state, click &#34;Perform reset&#34; (only possible with squashfs images).
+					</div>
+					<div class="cbi-section-node">
+						<div class="cbi-value">
+							<label class="cbi-value-title" for="image">Download backup:</label>
+							<div class="cbi-value-field">
+								<form action="/cgi-bin/create_conf_backup.cgi">
+									<input class="cbi-button cbi-button-apply" type="submit" name="backup" value="Generate archive" />
+								</form>
+							</div>
+						</div>
+						<div class="cbi-value cbi-value-last">
+							<label class="cbi-value-title">Reset to defaults:</label>
+							<div class="cbi-value-field">
+								<input onclick="f_submit_reset();" class="cbi-button cbi-button-reset" type="button" name="reset" value="Perform reset" />
+							</div>
+						</div>
+					</div>
+					<br />
+					<div class="cbi-section-descr">To restore configuration files, you can upload a previously generated backup archive here.</div>
+					<div class="cbi-section-node">
+						<div class="cbi-value cbi-value-last">
+							<label class="cbi-value-title" for="archive">Restore backup:</label>
+							<div class="cbi-value-field">
+								<form id="ant_restore_config_form" name="ant_restore_config_form" action="/cgi-bin/upload_conf.cgi" enctype="multipart/form-data" method="post">
+									<input type="file" name="datafile" />
+									<input class="cbi-button cbi-input-apply" type="button" onclick="f_submit_restore();" value="Upload archive..." />
+								</form>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+				<br />
+				<fieldset class="cbi-section">
+					<legend>Flash new firmware image</legend>
+					<div class="cbi-section-descr">
+						Upload a sysupgrade-compatible image here to replace the running firmware. Check &#34;Keep settings&#34; to retain the current configuration.
+					</div>
+					<div class="cbi-section-node">
+						<div class="cbi-value">
+							<label class="cbi-value-title" for="keep">Keep settings:</label>
+							<div class="cbi-value-field"><input type="checkbox" name="ant_keep" id="ant_keep" checked="checked"/></div>
+						</div>
+						<div class="cbi-value cbi-value-last">
+							<label class="cbi-value-title" for="image">Image:</label>
+							<div class="cbi-value-field">
+								<form id="ant_replace_firmware_form" name="ant_replace_firmware_form" action="/cgi-bin/upgrade.cgi" enctype="multipart/form-data" method="post">
+									<input type="file" name="datafile" />
+									<input class="cbi-button cbi-input-apply" type="button" onclick="f_submit_upgrade();" value="Flash image..." />
+								</form>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</fieldset>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div style="text-align: center; bottom: 0; left: 0; height: 1.5em; font-size: 80%; margin: 0; padding: 5px 0px 2px 8px; background-color: #918ca0; width: 100%;">
+		<font style="color:#fff;">Copyright &copy; 2013-2014, Bitmain Technologies</font>
+	</div>
+</body>
+</html>

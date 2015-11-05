@@ -1,0 +1,53 @@
+opt/libccan_a-opt.o: opt/opt.c ../ccan/opt/opt.h \
+ ../ccan/compiler/compiler.h ../config.h \
+ ../ccan/typesafe_cb/typesafe_cb.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdbool.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdlib.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/_mingw.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stddef.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/string.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/errno.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdio.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdarg.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sys/types.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/libgen.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/assert.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdint.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdint.h \
+ opt/private.h
+
+../ccan/opt/opt.h:
+
+../ccan/compiler/compiler.h:
+
+../config.h:
+
+../ccan/typesafe_cb/typesafe_cb.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdbool.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdlib.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/_mingw.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stddef.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/string.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/errno.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdio.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdarg.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sys/types.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/libgen.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/assert.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdint.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdint.h:
+
+opt/private.h:

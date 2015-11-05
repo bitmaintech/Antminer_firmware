@@ -1,0 +1,261 @@
+/*
+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+/dts-v1/;
+
+/include/ "am33xx.dtsi"
+
+/include/ "am335x-bone-common.dtsi"
+
+/include/ "am335x-bone-btm.dtsi"
+
+&am33xx_pinmux {
+	rstctl_pins: pinmux_rstctl_pins {
+		pinctrl-single,pins = <
+			/* eMMC_RSTn */
+			0x50 0x17	/* gpmc_a4.gpio1_20, OUTPUT | MODE7 | PULLUP */
+		>;
+	};
+	hd_ver_pins: pinmux_hd_ver_pins {
+		pinctrl-single,pins = <			
+			0xa4 0x37	/* gpmc_a4.gpio3_19, PIN_INPUT_PULLUP | MODE7 */
+			0xac 0x37	/* gpmc_a4.gpio3_21, PIN_INPUT_PULLUP | MODE7 */
+			0x48 0x37	/* gpmc_a4.gpio1_18, PIN_INPUT_PULLUP | MODE7*/
+		>;
+	};
+	 nandflash_pins_s0: nandflash_pins_s0 {
+		pinctrl-single,pins = <
+			0x0   0x30 /*(PIN_INPUT_PULLUP | MUX_MODE0)	 gpmc_ad0.gpmc_ad0 */
+			0x4   0x30 /*(PIN_INPUT_PULLUP | MUX_MODE0)	 gpmc_ad1.gpmc_ad1 */
+			0x8   0x30 /*(PIN_INPUT_PULLUP | MUX_MODE0)	 gpmc_ad2.gpmc_ad2 */
+			0xc   0x30 /*(PIN_INPUT_PULLUP | MUX_MODE0)	 gpmc_ad3.gpmc_ad3 */
+			0x10  0x30 /*(PIN_INPUT_PULLUP | MUX_MODE0)	 gpmc_ad4.gpmc_ad4 */
+			0x14  0x30 /*(PIN_INPUT_PULLUP | MUX_MODE0)	gpmc_ad5.gpmc_ad5 */
+			0x18  0x30 /*(PIN_INPUT_PULLUP | MUX_MODE0)	 gpmc_ad6.gpmc_ad6 */
+			0x1c  0x30 /*(PIN_INPUT_PULLUP | MUX_MODE0)	 gpmc_ad7.gpmc_ad7 */
+			0x70  0x30 /*(PIN_INPUT_PULLUP | MUX_MODE0) gpmc_wait0.gpmc_wait0 */
+			0x74  0x37 /*(PIN_INPUT_PULLUP | MUX_MODE7)	 gpmc_wpn.gpio0_30 */
+			0x7c  0x08 /*(PIN_OUTPUT | MUX_MODE0)		 gpmc_csn0.gpmc_csn0  */
+			0x90  0x08 /*(PIN_OUTPUT | MUX_MODE0)		 gpmc_advn_ale.gpmc_advn_ale */
+			0x94  0x08 /*(PIN_OUTPUT | MUX_MODE0)		 gpmc_oen_ren.gpmc_oen_ren */
+			0x98  0x08 /*(PIN_OUTPUT | MUX_MODE0)		 gpmc_wen.gpmc_wen */
+			0x9c  0x08 /*(PIN_OUTPUT | MUX_MODE0)		 gpmc_be0n_cle.gpmc_be0n_cle */
+		>;
+	};
+};
+
+&ldo3_reg {
+	regulator-min-microvolt = <1800000>;
+	regulator-max-microvolt = <1800000>;
+	regulator-always-on;
+};
+
+&rstctl {
+	status = "okay";
+	compatible = "gpio-rctrl";
+	pinctrl-names = "default";
+	pinctrl-0 = <&rstctl_pins>;
+
+	#reset-cells = <2>;
+
+	gpios = <&gpio2 20 0x00>;
+	gpio-names = "eMMC_RSTn";
+};
+
+&mmc1 {
+	vmmc-supply = <&vmmcsd_fixed>;
+};
+
+/*
+&mmc2 {
+	vmmc-supply = <&vmmcsd_fixed>;
+	bus-width = <8>;
+	ti,non-removable;
+	status = "disabled";
+
+	reset = <&rstctl 0 0>;
+	reset-names = "eMMC_RSTn-CONSUMER";
+};
+*/
+
+&cpu {
+	/*
+	 * To consider voltage drop between PMIC and SoC,
+	 * tolerance value is reduced to 2% from 4% and
+	 * voltage value is increased as a precaution.
+	 */
+	operating-points = <
+		/* kHz    uV */
+		1000000	1350000
+		800000	1300000
+		600000  1112000
+		300000   969000
+	>;
+	/*
+	elm: elm@48080000 {
+                        compatible = "ti,am3352-elm";
+                        reg = <0x48080000 0x2000>;
+                        interrupts = <4>;
+                        ti,hwmods = "elm";
+						#status = "disabled";
+                        status = "okay";
+                };
+	*/			
+};
+&ocp {
+elm: elm@48080000 {
+	compatible = "ti,am3352-elm";
+	reg = <0x48080000 0x2000>;
+	interrupts = <4>;
+	ti,hwmods = "elm";
+	//clocks = <&l4ls_gclk>;
+	clock-names = "fck";
+	status = "okay";
+	};
+};
+
+&gpmc {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&nandflash_pins_s0>;
+	ranges = <0 0 0x08000000 0x10000000>;	/* CS0: NAND */	
+	nand: nand@0,0 {	 
+	    gpmc,device-nand;   
+        reg = <0 0 0>; /* CS0, offset 0 */
+        nand-bus-width = <8>;
+        gpmc,device-width = <1>;
+        /**/
+        gpmc,sync-clk-ps = <0>;
+        gpmc,cs-on-ns = <0>;
+        gpmc,cs-rd-off-ns = <280>;
+        gpmc,cs-wr-off-ns = <280>;
+        gpmc,adv-on-ns = <50>;     
+        gpmc,adv-rd-off-ns = <280>;
+        gpmc,adv-wr-off-ns = <280>;
+        gpmc,we-on-ns = <50>;
+        gpmc,we-off-ns = <200>;
+        gpmc,oe-on-ns = <50>;
+        gpmc,oe-off-ns = <150>;
+        gpmc,access-ns = <200>;
+        gpmc,rd-cycle-ns = <300>;
+        gpmc,wr-cycle-ns = <300>;
+        gpmc,wait-on-read = "true";
+        gpmc,wait-on-write = "true";
+        gpmc,bus-turnaround-ns = <0>;
+        gpmc,cycle2cycle-delay-ns = <120>;
+        gpmc,cycle2cycle-samecsen = "true";
+        gpmc,clk-activation-ns = <0>;
+        gpmc,wait-monitoring-ns = <0>;
+        gpmc,wr-access-ns = <40>;
+        gpmc,wr-data-mux-bus-ns = <0>;
+        
+        /*
+        gpmc,sync-clk-ps = <0>;
+        gpmc,cs-on-ns = <0>;
+        gpmc,cs-rd-off-ns = <44>;
+        gpmc,cs-wr-off-ns = <44>;
+        gpmc,adv-on-ns = <10>;     
+        gpmc,adv-rd-off-ns = <44>;
+        gpmc,adv-wr-off-ns = <44>;
+        gpmc,we-on-ns = <5>;
+        gpmc,we-off-ns = <30>;
+        gpmc,oe-on-ns = <5>;
+        gpmc,oe-off-ns = <25>;
+        gpmc,access-ns = <30>;
+        gpmc,rd-cycle-ns = <50>;
+        gpmc,wr-cycle-ns = <50>;
+        gpmc,wait-on-read = "true";
+        gpmc,wait-on-write = "true";
+        gpmc,bus-turnaround-ns = <0>;
+        gpmc,cycle2cycle-delay-ns = <20>;
+        gpmc,cycle2cycle-samecsen = "true";
+        gpmc,clk-activation-ns = <0>;
+        gpmc,wait-monitoring-ns = <0>;
+        gpmc,wr-access-ns = <40>;
+        gpmc,wr-data-mux-bus-ns = <0>;
+        */
+        /*
+		gpmc,sync-clk-ps = <0>;
+        gpmc,cs-on-ns = <0>;
+        gpmc,cs-rd-off-ns = <88>;
+        gpmc,cs-wr-off-ns = <88>;
+        gpmc,adv-on-ns = <10>;     
+        gpmc,adv-rd-off-ns = <88>;
+        gpmc,adv-wr-off-ns = <88>;
+        gpmc,we-on-ns = <10>;
+        gpmc,we-off-ns = <60>;
+        gpmc,oe-on-ns = <10>;
+        gpmc,oe-off-ns = <50>;
+        gpmc,access-ns = <60>;
+        gpmc,rd-cycle-ns = <100>;
+        gpmc,wr-cycle-ns = <100>;
+        gpmc,wait-on-read = "true";
+        gpmc,wait-on-write = "true";
+        gpmc,bus-turnaround-ns = <0>;
+        gpmc,cycle2cycle-delay-ns = <40>;
+        gpmc,cycle2cycle-samecsen = "true";
+        gpmc,clk-activation-ns = <0>;
+        gpmc,wait-monitoring-ns = <0>;
+        gpmc,wr-access-ns = <40>;
+        gpmc,wr-data-mux-bus-ns = <0>;
+		*/
+        ti,nand-ecc-opt= "bch8";
+        ti,elm-id = <&elm>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		partition@0 {
+			label = "spl";
+			reg = <0x0 0x20000>;
+		};
+
+		partition@1 {
+			label = "spl_backup1";
+			reg = <0x20000 0x20000>;
+		};
+
+		partition@2 {
+			label = "spl_backup2";
+			reg = <0x40000 0x20000>;
+		};
+
+		partition@3 {
+			label = "spl_backup3";
+			reg = <0x60000 0x20000>;
+		};
+
+		partition@4 {
+			label = "u-boot";
+			reg = <0x80000 0x1c0000>;
+		};
+
+		partition@5 {
+			label = "bootenv";
+			reg = <0x240000 0x20000>;
+		};
+		
+		partition@6 {
+			label = "fdt";
+			reg = <0x260000 0x20000>;
+		};
+
+		partition@7 {
+			label = "kernel";
+			reg = <0x280000 0x500000>;
+		};
+
+		partition@8 {
+			label = "root";
+			reg = <0x800000 0x1400000>;
+		};
+		
+		partition@9 {
+			label = "config";
+			reg = <0x1c00000 0x1400000>;
+		};
+	};
+};

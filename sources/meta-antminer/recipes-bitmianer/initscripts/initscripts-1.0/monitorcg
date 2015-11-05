@@ -1,0 +1,33 @@
+#!/bin/sh
+#set -x
+check_inter="20s"
+while true; do
+	sleep $check_inter
+	#date
+	a="$(ps | grep cgminer | grep -v 'grep cgminer')"
+	if [ -z "$a" ] ; then
+		/etc/init.d/cgminer.sh restart
+	else
+		if [ "$check_inter" == "20s" ]; then
+			check_inter="5m"
+			continue
+		fi
+		A=`cat /tmp/cm.log`
+		B=`cgminer-api devs | grep "^   \[Last Valid Work\]"`
+		echo "$B" > /tmp/cm.log
+		if [ "$B" != "" -a "$A" == "$B" ]; then
+	    	echo "Case B"
+			#killall -s 9 cgminer
+			sleep 1
+			#/etc/init.d/cgminer.sh restart
+		fi
+
+		D=`cgminer-api stats | grep "^   \[miner_count\]"`
+		if [ "$D" == "" ]; then
+			echo "Case D"
+			killall -s 9 cgminer
+			sleep 1
+			/etc/init.d/cgminer.sh restart
+		fi
+	fi
+done

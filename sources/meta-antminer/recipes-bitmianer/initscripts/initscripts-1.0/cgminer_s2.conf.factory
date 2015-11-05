@@ -1,0 +1,24 @@
+{
+"pools" : [
+{
+"url" : "solo.antpool.com:25",
+"user" : "antminer",
+"pass" : "123"
+},
+{
+"url" : "p2p.antpool.com:3333",
+"user" : "antminer",
+"pass" : "123"
+},
+{
+"url" : "stratum+tcp://stratum.f2pool.com:3333",
+"user" : "ant.1",
+"pass" : "123"
+}
+]
+,
+"api-listen" : true,
+"api-network" : true,
+"api-allow" : "W:0/0",
+"bitmain-freq" : "5:200:0782",
+}

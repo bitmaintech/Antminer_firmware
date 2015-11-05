@@ -1,0 +1,22 @@
+---- opt_log_interval Matches (21 in 3 files) ----
+Api.c:	root = api_add_int(root, "Log Interval", &opt_log_interval, false);
+Api.c:		sprintf(mhsname, "MHS %ds", opt_log_interval);
+Api.c:		sprintf(mhsname, "MHS %ds", opt_log_interval);
+Api.c:	cgsleep_ms(opt_log_interval*1000);
+Cgminer.c:int opt_log_interval = 5;
+Cgminer.c:		     set_int_0_to_9999, opt_show_intval, &opt_log_interval,
+Cgminer.c:/* Create an exponentially decaying average over the opt_log_interval */
+Cgminer.c:	fprop = 1.0 - 1 / (exp(fsecs / (double)opt_log_interval));
+Cgminer.c:		opt_log_interval,
+Cgminer.c:		opt_log_interval);
+Cgminer.c:		opt_log_interval = selected;
+Cgminer.c:		wlogprint("Log interval set to %d seconds\n", opt_log_interval);
+Cgminer.c:			if (opt_log_interval <= elapsed.tv_sec) {
+Cgminer.c:	/* Only update with opt_log_interval */
+Cgminer.c:	if (total_diff.tv_sec < opt_log_interval)
+Cgminer.c:		opt_log_interval, displayed_rolling, displayed_hashes,
+Cgminer.c:	const long cycle = opt_log_interval / 5 ? : 1;
+Cgminer.c:			    diff.tv_sec >= opt_log_interval) {
+Cgminer.c:		    diff.tv_sec >= opt_log_interval) {
+Cgminer.c:		    diff.tv_sec >= opt_log_interval) {
+Miner.h:extern int opt_log_interval;

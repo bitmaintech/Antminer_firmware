@@ -1,0 +1,9 @@
+#!/bin/sh 
+#set -x 
+
+APP= miner-monitor
+PID_FILE=/var/run/$APP.pid
+start() 
+{ 
+  start-stop-daemon -S -x $APP -p $PID_FILE -m -b -- "sleep-40"  
+} 

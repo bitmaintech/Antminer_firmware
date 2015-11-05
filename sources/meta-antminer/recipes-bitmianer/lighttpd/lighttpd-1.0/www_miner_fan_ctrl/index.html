@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="cache-control" content="no-cache" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/cascade.css" />
+<!--[if IE 6]><link rel="stylesheet" type="text/css" media="screen" href="/css/ie6.css" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" type="text/css" media="screen" href="/css/ie7.css" /><![endif]-->
+<!--[if IE 8]><link rel="stylesheet" type="text/css" media="screen" href="/css/ie8.css" /><![endif]-->
+<script type="text/javascript" src="/js/xhr.js"></script>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="/js/json2.min.js"></script>
+<script>
+function f_get_system_info() {
+	$.ajax({
+		url: '/cgi-bin/get_system_info.cgi',
+		type: 'GET',
+		dataType: 'json',
+		timeout: 30000,
+		cache: false,
+		success: function(data) {
+			try
+			{
+				$("#ant_minertype").html(data.minertype);
+				$("#ant_nettype").html(data.nettype);
+				if(data.nettype != "DHCP") {
+					$("#ant_netsetup").css("display", "block");
+				}
+				$("#ant_netdevice").html(data.netdevice);
+				$("#ant_hostname").html(data.hostname);
+				$("#ant_ipaddress").html(data.ipaddress);
+				$("#ant_netmask").html(data.netmask);
+				$("#ant_gateway").html(data.gateway);
+				$("#ant_dnsservers").html(data.dnsservers);
+				
+				$("#ant_uptime").html(data.uptime);
+				$("#ant_loadaverage").html(data.loadaverage);
+				
+				percent=0;
+				if(data.mem_used != '' && data.mem_total != '' && data.mem_total != '0') {
+					percent = Math.round(data.mem_used * 100 / data.mem_total);
+				}
+				$("#ant_mem_used_div").css("width", percent+"%");
+				$("#ant_mem_used").html(data.mem_used+' kB / '+data.mem_total+' kB ('+percent+'%)');
+				
+				percent=0;
+				if(data.mem_free != '' && data.mem_total != '' && data.mem_total != '0') {
+					percent = Math.round(data.mem_free * 100 / data.mem_total);
+				}
+				$("#ant_mem_free_div").css("width", percent+"%");
+				$("#ant_mem_free").html(data.mem_free+' kB / '+data.mem_total+' kB ('+percent+'%)');
+				
+				percent=0;
+				if(data.mem_buffers != '' && data.mem_total != '' && data.mem_total != '0') {
+					percent = Math.round(data.mem_buffers * 100 / data.mem_total);
+				}
+				$("#ant_mem_buffers_div").css("width", percent+"%");
+				$("#ant_mem_buffers").html(data.mem_buffers+' kB / '+data.mem_total+' kB ('+percent+'%)');
+				
+				percent=0;
+				if(data.mem_cached != '' && data.mem_total != '' && data.mem_total != '0') {
+					percent = Math.round(data.mem_cached * 100 / data.mem_total);
+				}
+				$("#ant_mem_cached_div").css("width", percent+"%");
+				$("#ant_mem_cached").html(data.mem_cached+' kB / '+data.mem_total+' kB ('+percent+'%)');
+				
+				$("#ant_system_mode").html(data.system_mode);
+				hw_version = data.ant_hwv1 + '.' + data.ant_hwv2 + '.' + data.ant_hwv3 + '.' + data.ant_hwv4;
+				$("#ant_system_hardware_version").html(hw_version);
+				$("#ant_system_kernel_version").html(data.system_kernel_version);
+				$("#ant_system_filesystem_version").html(data.system_filesystem_version);
+				$("#ant_cgminer_version").html(data.cgminer_version);
+			}
+			catch(err)
+			{
+				alert('Invalid system and miner configuration file. Edit manually or reset to default.');
+			}
+		},
+		error: function() {
+			//alert('Ajax Error');
+		}
+	});
+}
+
+$(document).ready(function() {
+	f_get_system_info();
+});
+</script>
+<title>Ant Miner</title>
+</head>
+<body class="lang_en">
+	<p class="skiplink">
+		<span id="skiplink1"><a href="#navigation">Skip to navigation</a></span>
+		<span id="skiplink2"><a href="#content">Skip to content</a></span>
+	</p>
+	<div id="menubar">
+		<h2 class="navigation">
+			<a id="navigation" name="navigation">Navigation</a>
+		</h2>
+		<div class="clear"></div>
+	</div>
+	<div id="menubar" style="background-color: #0a2b40;">
+		<div class="hostinfo" style="float: left; with: 500px;">
+			<img src="/images/antminer_logo.png" width="92" height="50" alt="" title="" border="0" />
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div id="maincontainer">
+		<div id="tabmenu">
+			<div class="tabmenu1">
+				<ul class="tabmenu l1">
+					<li class="tabmenu-item-status active"><a href="/index.html">System</a></li>
+					<li class="tabmenu-item-system"><a href="/cgi-bin/minerConfiguration.cgi">Miner Configuration</a></li>
+					<li class="tabmenu-item-network"><a href="/cgi-bin/minerStatus.cgi">Miner Status</a></li>
+					<li class="tabmenu-item-system"><a href="/network.html">Network</a></li>
+
+				</ul>
+				<br style="clear: both" />
+				<div class="tabmenu2">
+					<ul class="tabmenu l2">
+						<li class="tabmenu-item-system active"><a href="/index.html">Overview</a></li>
+						<li class="tabmenu-item-system"><a href="/administration.html">Administration</a></li>
+						<li class="tabmenu-item-admin"><a href="/monitor.html">Monitor</a></li>
+						<li class="tabmenu-item-packages"><a href="/kernelLog.html">Kernel Log</a></li>
+						<li class="tabmenu-item-startup"><a href="/upgrade.html">Upgrade</a></li>
+						<li class="tabmenu-item-crontab"><a href="/reboot.html">Reboot</a></li>
+					</ul>
+					<br style="clear: both" />
+				</div>
+			</div>
+		</div>
+		<div id="maincontent">
+			<noscript>
+				<div class="errorbox">
+					<strong>Java Script required!</strong><br /> You must enable Java Script in your browser or web will not work properly.
+				</div>
+			</noscript>
+			<h2 style="padding-bottom:10px;"><a id="content" name="content">Overview</a></h2>
+			<fieldset class="cbi-section">
+				<legend>System</legend>
+				<table width="100%" cellspacing="10">
+					<tr><td width="33%">Miner Type</td><td id="ant_minertype"></td></tr>
+					<tr><td width="33%">Hostname</td><td id="ant_hostname"></td></tr>
+					<tr><td width="33%">Model</td><td id="ant_system_mode"></td></tr>
+					<tr><td width="33%">Hardware Version</td><td id="ant_system_hardware_version"></td></tr>
+					<tr><td width="33%">Kernel Version</td><td id="ant_system_kernel_version"></td></tr>
+					<tr><td width="33%">File System Version</td><td id="ant_system_filesystem_version"></td></tr>
+					<tr><td width="33%">Cgminer Version</td><td id="ant_cgminer_version"></td></tr>
+					<tr><td width="33%">Uptime</td><td id="ant_uptime"></td></tr>
+					<tr><td width="33%">Load Average</td><td id="ant_loadaverage"></td></tr>
+				</table>
+			</fieldset>
+			<fieldset class="cbi-section">
+				<legend>Memory</legend>
+				<table width="100%" cellspacing="10">
+					<tr>
+						<td width="33%">Total Available</td>
+						<td id="memtotal">
+							<div style="width: 200px; position: relative; border: 1px solid #999999">
+								<div id="ant_mem_used_div" style="background-color: #CCCCCC; width: 0%; height: 15px">
+									<div style="position: absolute; left: 0; top: 0; text-align: center; width: 100%; color: #000000">
+										<small id="ant_mem_used">0 kB / 0 kB (0%)</small>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="33%">Free</td>
+						<td id="memfree">
+							<div style="width: 200px; position: relative; border: 1px solid #999999">
+								<div id="ant_mem_free_div" style="background-color: #CCCCCC; width: 0%; height: 15px">
+									<div style="position: absolute; left: 0; top: 0; text-align: center; width: 100%; color: #000000">
+										<small id="ant_mem_free">0 kB / 0 kB (0%)</small>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="33%">Cached</td>
+						<td id="memcache">
+							<div style="width: 200px; position: relative; border: 1px solid #999999">
+								<div id="ant_mem_cached_div" style="background-color: #CCCCCC; width: 0%; height: 15px">
+									<div style="position: absolute; left: 0; top: 0; text-align: center; width: 100%; color: #000000">
+										<small id="ant_mem_cached">0 kB / 0 kB (0%)</small>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="33%">Buffered</td>
+						<td id="membuff">
+							<div style="width: 200px; position: relative; border: 1px solid #999999">
+								<div id="ant_mem_buffers_div" style="background-color: #CCCCCC; width: 0%; height: 15px">
+									<div style="position: absolute; left: 0; top: 0; text-align: center; width: 100%; color: #000000">
+										<small id="ant_mem_buffers">0 kB / 0 kB (0%)</small>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+			<fieldset class="cbi-section">
+				<legend>Network</legend>
+				<table width="100%" cellspacing="10">
+					<tr>
+						<td width="33%" style="vertical-align: top;">IP Status</td>
+						<td>
+							<table>
+								<tr>
+									<td id="wan4_i" style="width: 16px; text-align: center; padding: 3px;">
+										<img src="/resources/icons/ethernet.png" /><br />
+										<small><a id="ant_netdevice" href="/network.html"></a></small>
+									</td>
+									<td id="wan4_s" style="vertical-align: middle; padding: 3px;">
+										<small>
+											<strong>Type: </strong><span id="ant_nettype"></span><br />
+											<strong>Address: </strong><span id="ant_ipaddress"></span><br />
+											<strong>Netmask: </strong><span id="ant_netmask"></span><br />
+											<span id="ant_netsetup" style="display: none">
+												<strong>Gateway:</strong><span id="ant_gateway"></span><br />
+												<strong>DNS: </strong><span id="ant_dnsservers"></span><br />
+											</span>
+										</small>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</fieldset>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div style="text-align: center; bottom: 0; left: 0; height: 1.5em; font-size: 80%; margin: 0; padding: 5px 0px 2px 8px; background-color: #918ca0; width: 100%;">
+		<font style="color:#fff;">Copyright &copy; 2013-2014, Bitmain Technologies</font>
+	</div>
+</body>
+</html>
+

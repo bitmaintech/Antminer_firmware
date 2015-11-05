@@ -1,0 +1,152 @@
+#!/bin/bash
+
+LAYERNAME=$1
+LAYERURI=$2
+BRANCH=$3
+REV=$4
+COMMAND=$5
+COMMANDARG=$6
+
+LAYERDIR="${OE_SOURCE_DIR}/${LAYERNAME}"
+
+LAYERINFO="layer repository name: ${LAYERNAME}\nlayer uri: ${LAYERURI}\nlayer branch/revision: ${BRANCH}/${REV}\n"
+
+function check_layer() {
+	if ! [ -e ${LAYERDIR} ] ; then
+		echo -e ${LAYERINFO}
+		echo "Layer checkout missing at ${LAYERDIR}, creating one"
+		git clone ${LAYERURI} ${LAYERDIR}
+		cd ${LAYERDIR}
+
+		if [ "${BRANCH}" != "master" ] ; then
+			git checkout origin/${BRANCH} -b ${BRANCH}
+		fi
+
+		if [ "${REV}" != "HEAD" ] ; then
+			git reset --hard ${REV}
+		fi
+
+		echo "Layers present in repository:"
+		find ${LAYERDIR} -name "layer.conf" | sed -e s:${LAYERDIR}:${LAYERNAME}:g -e s:/conf/layer\.conf::g
+		echo
+
+	else
+		cd ${LAYERDIR}
+		CURRENTCOMMIT="$(git log --oneline --no-abbrev -1 | awk '{print $1}')"
+		CURRENTBRANCH="$(git branch | grep '*' | awk '{print $2}')"
+		CURRENTURI="$(git config remote.origin.url)"
+
+		if [ "${CURRENTURI}" != "${LAYERURI}" ] ; then
+			echo "WARNING!!!!"
+			echo "WARNING: ${LAYERNAME} is using a different uri '${CURRENTURI}' than configured in layers.txt '${LAYERURI}'"
+			echo "WARNING: Changing uri to: '${LAYERURI}'"
+			echo "WARNING!!!!"
+			git remote set-url origin ${LAYERURI}
+			git remote update
+		fi
+		if [ "${CURRENTBRANCH}" != "${BRANCH}" ] ; then
+			#echo -e ${LAYERINFO}
+			echo "WARNING!!!!"
+			echo "WARNING: ${LAYERNAME} is using a different branch '${CURRENTBRANCH}' than configured in layers.txt '${BRANCH}'"
+			echo "WARNING: Changing branch to: '${BRANCH}'"
+ 			echo "WARNING!!!!"
+			git checkout origin/${BRANCH} -b ${BRANCH} >/dev/null || git checkout ${BRANCH}
+		fi
+	fi
+}
+
+
+function get_info() {
+	check_layer
+
+	cd ${LAYERDIR}
+	CURRENTCOMMIT="$(git log --oneline --no-abbrev -1 | awk '{print $1}')"
+	CURRENTBRANCH="$(git branch | grep '*' | awk '{print $2}')"
+
+	echo "${LAYERNAME},${LAYERURI},${CURRENTBRANCH},${CURRENTCOMMIT}" >> ${OE_SOURCE_DIR}/info.txt
+}
+
+function update_layers() {
+	check_layer
+
+	echo -n "Processing ${LAYERNAME}: "
+
+	if [ "${REV}" = "HEAD" ] ; then
+		cd ${LAYERDIR} || exit 1
+		git stash >&/dev/null && git pull --rebase && git stash pop >& /dev/null
+		git gc >& /dev/null && git remote prune origin >& /dev/null
+	else
+		cd ${LAYERDIR} || exit 1
+		CURRENTCOMMIT="$(git log --oneline --no-abbrev -1 | awk '{print $1}')"
+		CURRENTBRANCH="$(git branch | grep '*' | awk '{print $2}')"
+
+		if [ "${BRANCH}" != "${CURRENTBRANCH}" ] ; then
+			if [ "${REV}" != "${CURRENTCOMMIT}" ] ; then
+				echo "WARNING!!!!"
+				echo "WARNING: ${LAYERNAME} is using a different revision and branch than configured in layers.txt"
+				echo "WARNING!!!!"
+			fi
+		else
+			if [ "${REV}" != "${CURRENTCOMMIT}" ] ; then
+				git remote update
+				echo "updating to ${REV}"
+				git stash >&/dev/null && git reset --hard ${REV} && git stash pop >& /dev/null
+			else
+				echo "Fixed to revision ${REV}, skipping update"
+			fi
+		fi
+	fi	
+}
+
+function tag_layers() {
+	check_layer
+	cd ${LAYERDIR} && echo "Tagging layer with $COMMANDARG" && git tag $COMMANDARG
+	echo ""
+}
+
+function reset_layers() {
+	check_layer
+	if [ -e ${LAYERDIR} ] ; then
+		echo "WARNING!!!!"
+		echo "WARNING: ${LAYERNAME}: Removing local changes including stash and ignored files!!"
+		echo "WARNING!!!!"
+		git stash clear
+		git clean -fdx
+		if [ "${REV}" != "HEAD" ] ; then
+			git reset --hard ${REV}
+		else
+			git reset --hard ${BRANCH}
+		fi
+	fi
+	echo ""
+}
+
+function diff_tags() {
+	check_layer
+	cd ${LAYERDIR} && LOG="$(git shortlog $COMMANDARG)"
+	if [ -n "$LOG" ] ; then
+		echo "Changes to ${LAYERNAME} in between $COMMANDARG" && echo "" && echo "$LOG"
+		echo ""
+	fi
+}
+
+function checkout_tag() {
+	check_layer
+	cd ${LAYERDIR} && echo "Checking out $COMMANDARG" && git checkout $COMMANDARG
+	echo ""
+}
+
+case $COMMAND in
+tag)
+	tag_layers;;
+reset)
+	reset_layers;;	
+changelog)
+	diff_tags;;
+info)
+	get_info;;
+checkout)
+	checkout_tag;;	
+*)
+	update_layers;;
+esac

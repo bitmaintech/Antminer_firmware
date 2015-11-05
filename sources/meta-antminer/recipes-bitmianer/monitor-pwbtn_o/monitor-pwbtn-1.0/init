@@ -1,0 +1,44 @@
+#!/bin/sh
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/bin/monitor-pwbtn
+NAME=monitor-pwbtn
+DESC="Monitor-pwbtn daemon"
+ARGS="/usr/bin/factory_config_reset.sh"
+
+set -e
+
+test -x "$DAEMON" || exit 0
+
+do_start() {
+        start-stop-daemon -b -S -x $DAEMON -- $ARGS
+}
+
+do_stop() {
+        killall -9 $NAME
+}
+case "$1" in
+  start)
+        echo -n "Starting $DESC: "
+	do_start
+        echo "$NAME."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: "
+	do_stop
+        echo "$NAME."
+        ;;
+  restart|force-reload)
+        echo -n "Restarting $DESC: "
+        do_stop
+        do_start
+        echo "$NAME."
+        ;;
+  *)
+        N=/etc/init.d/$NAME
+        echo "Usage: $N {start|stop|restart|force-reload}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -1,0 +1,23 @@
+utf.lo: utf.c \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/string.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/_mingw.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stddef.h utf.h ../config.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/inttypes.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdint.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdint.h
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/string.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/_mingw.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stddef.h:
+
+utf.h:
+
+../config.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/inttypes.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdint.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdint.h:

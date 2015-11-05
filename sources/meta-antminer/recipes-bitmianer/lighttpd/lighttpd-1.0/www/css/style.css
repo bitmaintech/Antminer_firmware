@@ -1,0 +1,163 @@
+/***************************************************************
+RESET BROWSER VALUES SO EVERYONE IS THE SAME
+***************************************************************/
+@import url(reset.css);
+
+/***************************************************************
+CUSTOM FONTS
+***************************************************************/
+
+/***************************************************************
+TAG STYLES
+***************************************************************/
+body { background: url(images/bg_logo.png) no-repeat center 40px fixed, url(images/bg.jpg); margin: 0; font-family: 'titillium_weblight', sans-serif; font-size: 18px; color: #384246; }
+ul, ol { margin: 0 0 20px 0; padding: 0; }
+li { list-style: none; display: inline; }
+
+/***************************************************************
+GENERIC CLASSES 
+***************************************************************/
+.xbox { background: url(images/bg_box.jpg); padding: 20px; }
+.margin { padding: 0 10px; }
+.news { margin: 2.42% 0 0 0; }
+.news:first-child { margin: 0; }
+.box { margin-bottom: 20px; }
+
+/***************************************************************
+SPECIFIC AREAS
+***************************************************************/
+#wrapper { width: 940px; margin: 0 auto; }
+#logo { margin-bottom: 14px; }
+
+#login { margin-top: 0; }
+#login input, #login button { padding: 2%; border: none; font-size: 0.7em; width: 27.3%; float: left; margin-right: 5%; }
+#login button { float: right; margin: 0; }
+
+header nav a { text-decoration: none; font-size: 1.2em; font-weight: 600; color: #4D6E99; }
+#main_nav a { background: #4D6E99; width: 48.37%; display: block; color: white; font-size: 2.2em; text-align: center; float: left; }
+#main_nav li.last a { margin-left: 3.25%; float: right; }
+#sub_nav a { margin-right: 20px; line-height: 2.8em; height: inherit; display: block; float: left; padding: 0 20px; font-family: 'titillium_webregular'; margin-bottom: 20px; }
+#sub_nav li.active a { background: #4D6E99; color: white; }
+
+a { -webkit-transition: background-color 0.2s ease-out; -moz-transition: background-color 0.2s ease-outt; -o-transition: background-color 0.2s ease-out; transition: background-color 0.2s ease-out; }
+h1 { color: #4d6e99; margin: 0; font-family: 'titillium_weblight'; font-size: 26px; }
+h2 { color: #384246; margin: 0; font-family: 'titillium_weblight'; font-size: 26px; }
+h3 { color: #4d6e99; margin: 0; font-family: 'titillium_webregular'; font-size: 26px; }
+p { margin-top: 0px; }
+p a, h2 a { font-family: 'titillium_webthin_italic'; color: #4d6e99; text-decoration: underline; }
+p a:hover, h2 a:hover { background-color: transparent; color: #7697c1; }
+p a:active, h2 a:active { background-color: transparent; color: #4d6e99; }
+
+a.active:active, a:hover, .active { background-color: #4d6e99; color: #fff; }
+a:active, .active:hover { background-color: #7697c1; color: #fff; }
+p a, h2 a { -webkit-transition: color 0.2s ease-out; -moz-transition: color 0.2s ease-outt; -o-transition: color 0.2s ease-out; transition: color 0.2s ease-out; }
+
+.xbox ul li { display: list-item; list-style: disc; margin-left: 20px; }
+.xbox ol li { display: list-item; list-style-type: decimal; margin-left: 20px; }
+input[type="text"] { height: 30px; width: 300px; font-size: 18px; font-family: 'titillium_webthin'; padding-left: 10px; margin: 10px 20px; }
+label { height: 30px; line-height: 30px; margin-right: 20px; }
+input[type="radio"], input[type="checkbox"] { margin: 10px 10px 10px 0; line-height: 30px; }
+.inline { display: inline; }
+.block { display: block; }
+.section { margin-top: 20px; }
+footer { margin-bottom: 100px; margin-top: 20px; }
+
+*::selection { background-color: #4d6e99; color: #fff; }
+*::-moz-selection { background-color: #4d6e99; color: #fff; }
+
+h1::selection, h3::selection { background-color: #7697c1; }
+h1::-moz-selection, h3::-moz-selection { background-color: #7697c1; }
+
+button { 
+	margin: 10px 0;
+	font-family: 'titillium_webregular';
+	font-size: 18px;
+	line-height: 30px;
+	
+	-moz-box-shadow: inset 0px 1px 0px 0px #7595c0;
+	-webkit-box-shadow: inset 0px 1px 0px 0px #7595c0;
+	box-shadow: inset 0px 1px 0px 0px #7595c0;
+	background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #5679af), color-stop(1, #47648e) );
+	background: -moz-linear-gradient( center top, #5679af 5%, #47648e 100% );
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5679af', endColorstr='#47648e');
+	background-color: #5679af;
+	
+	-webkit-border-top-left-radius: 4px;
+	-moz-border-radius-topleft: 4px;
+	border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-moz-border-radius-topright: 4px;
+	border-top-right-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	-moz-border-radius-bottomright: 4px;
+	border-bottom-right-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	border-bottom-left-radius: 4px;
+	text-indent: 0px;
+	border: 1px solid #48658f;
+	display: inline-block;
+	color: #fff;
+	text-decoration: none;
+	text-align: center;
+}
+button:hover {
+	-moz-box-shadow: inset 0px 1px 0px 0px #8ba8ce;
+	-webkit-box-shadow: inset 0px 1px 0px 0px #8ba8ce;
+	box-shadow: inset 0px 1px 0px 0px #8ba8ce;
+	background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #6a8fc1), color-stop(1, #5879a4) );
+	background: -moz-linear-gradient( center top, #6a8fc1 5%, #5879a4 100% );
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6a8fc1', endColorstr='#5879a4');
+	background-color: #6a8fc1;
+
+}
+button:active {
+	position:relative;
+	top:1px;
+}
+
+/************************
+FOR MINING PAGE
+*************************/
+.del-btn, #addBtn {
+	float: right;
+	margin-top: 0px;
+}
+
+.factoryDefaultBtn {
+	float: right;
+}
+
+#pools {
+	clear:both;
+}
+
+.pool-form {
+	padding: 8px;
+	margin: 8px 0;
+	background-color: rgba(0,0,0,0.1);
+		
+}
+
+/* Note: This affects labels on all pages */
+.box label {
+	display: inline-block;
+	margin-right: 10px;
+	width: 190px;
+}
+
+button[disabled=disabled], button:hover[disabled=disabled], button:active[disabled=disabled] {
+	-moz-box-shadow: inset 0px 1px 0px 0px #c0c0c0;
+	-webkit-box-shadow: inset 0px 1px 0px 0px #c0c0c0;
+	box-shadow: inset 0px 1px 0px 0px #c0c0c0;
+	background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #cfcfcf), color-stop(1, #8e8e8e) );
+	background: -moz-linear-gradient( center top, #cfcfcf 5%, #8e8e8e 100% );
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cfcfcf', endColorstr='#8e8e8e');
+	background-color: #cfcfcf;
+	border: 1px solid #afafaf;
+
+}
+
+
+
+

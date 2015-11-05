@@ -1,0 +1,29 @@
+sigaction.o: sigaction.c ../config.h signal.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/signal.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/_mingw.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sys/types.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stddef.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/errno.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdint.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdint.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdlib.h
+
+../config.h:
+
+signal.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/signal.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/_mingw.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sys/types.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stddef.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/errno.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdint.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdint.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdlib.h:

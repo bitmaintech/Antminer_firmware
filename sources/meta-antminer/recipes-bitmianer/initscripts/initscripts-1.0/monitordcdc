@@ -1,0 +1,186 @@
+#!/bin/sh
+
+TMP_FILE="/tmp/stat_tmp"
+STAT_FILE="/var/run/stats.btm"
+
+INTERVAL=5
+THRESHOLD=3
+
+for channel in 0 1 2 3 4 5 ; do
+	for d in 0 1 2 3 ; do
+		good=0
+		i=$((d*48))
+		end=$((d*48+48))
+		while [ $i -lt $end ] ; do
+			a=$(i2cget -y 2 0x2$channel $i)
+			b=$((a))
+			if [ $b -ge 2 ] ; then
+				good=1
+				break
+			fi
+			i=$((i+1))
+		done
+		if [ "x$good" != "x1" ] ; then
+			echo 1000 > /var/run/die${channel}${d}
+		else
+			echo 0 > /var/run/die${channel}${d}
+		fi
+	done
+
+	# Give them a kick!
+	i2cset -y 2 0x2$channel 0xe5 0 >/dev/null 2>&1
+	usleep 300000
+	i2cset -y 2 0x2$channel 0xe5 1 >/dev/null 2>&1
+	usleep 300000
+	i2cset -y 2 0x2$channel 0xe5 2 >/dev/null 2>&1
+	usleep 300000
+	i2cset -y 2 0x2$channel 0xe5 3 >/dev/null 2>&1 
+done
+echo 0 > /var/run/tm
+
+sum_failed_4=0
+while true; do
+	echo > $TMP_FILE
+	for channel in 0 1 2 3 4 5; do
+		bus=$((channel+3))
+		asic=$((channel+1))
+
+		id=$(i2cget -y $bus 0x48 7 2>/dev/null)
+		if [[ "x$id" != "x0xa1" ]] ; then
+			echo "asic$asic=OFF" >> $TMP_FILE
+		else
+			temp1=$(i2cget -y $bus 0x48 0 w 2>/dev/null)
+			deg=$(echo $temp1 | cut -c5-6)
+			half=$(echo $temp1 | cut -c3)
+			if [ -n "$deg" -a -n "$half" ] ; then
+				if [ "$half" = "8" ] ; then
+					half=5
+				fi
+				temp=$(printf "%u.%u" 0x$deg $half)
+				echo "asic$asic=$temp" >> $TMP_FILE
+			else
+				echo "asic$asic=OFF" >> $TMP_FILE
+			fi
+		fi
+
+		for d in 0 1 2 3 4 5 6 7; do
+			if [ "`i2cget -y $bus 0x1$d 0x2 2>/dev/null`" != "0x17" ]; then
+				continue
+			fi
+			q=$((d/2))
+                        cnt=$(cat /var/run/die${channel}${q} 2>/dev/null)
+                        if [ -z "$cnt" ] ; then
+                                cnt=0
+                        fi
+			if [ "`i2cget -y $bus 0x1$d 0x8c w | cut -c3-4`" = e0 ]; then
+				cnt=$((cnt+1))
+			fi
+			echo $cnt > /var/run/die${channel}${q}
+			sleep 1
+		done
+	done
+
+	mv $TMP_FILE $STAT_FILE
+
+	tm=$(cat /var/run/tm 2>/dev/null)
+	if [ -z "$tm" ] ; then
+		tm=0
+	fi
+	tm=$((tm+1))
+	if [ $tm -lt $INTERVAL ] ; then
+		echo $tm > /var/run/tm
+		sleep 4
+		continue
+	fi
+	echo 0 > /var/run/tm
+
+	sum_failed=0
+	sum_all=0
+	for channel in 0 1 2 3 4 5; do
+		bus=$((channel+3))
+		failed0=0
+		failed_non0=0
+		failed1=0
+		failed2=0
+		failed3=0
+		for q in 0 1 2 3; do
+                        cnt=$(cat /var/run/die${channel}${q} 2>/dev/null)
+                        if [ -z "$cnt" ] ; then
+                                cnt=0
+                        fi
+                        if [ $cnt -ge 1000 ] ; then
+				echo 1000 > /var/run/die${channel}${q}
+				continue
+                        fi
+                        sum_all=$(( sum_all + 1 ))
+			echo 0 > /var/run/die${channel}${q}
+                        if [ $cnt -le $THRESHOLD ] ; then
+				continue
+                        fi
+                        d=$((q*2))
+                        if [ "$d" = "6" ] ; then
+				d=7
+                        fi
+			if [ "`i2cget -y $bus 0x1$d 0x8c w | cut -c3-4`" != e0 ]; then
+				continue
+			fi
+			# Die failed
+			if [ "$q" = "0" ] ; then
+				failed0=1
+			fi
+			if [ "$q" = "1" ] ; then
+				failed_non0=1
+				failed1=1
+			fi
+			if [ "$q" = "2" ] ; then
+				failed_non0=1
+				failed2=1
+			fi
+			if [ "$q" = "3" ] ; then
+				failed_non0=1
+				failed3=1
+			fi
+		done
+		# restart die
+		if [ "$failed0" = "1" ] ; then
+			if [ "$failed_non0" = "1" ] ; then
+				i2cset -y 2 0x2$channel 0xe5 0
+				usleep 200000
+				failed1=1
+				failed2=1
+				failed3=1
+			fi
+		fi
+		if [ "$failed1" = "1" ] ; then
+			i2cset -y 2 0x2$channel 0xe5 1
+			usleep 200000
+		fi
+		if [ "$failed2" = "1" ] ; then
+			i2cset -y 2 0x2$channel 0xe5 2
+			usleep 200000
+		fi
+		if [ "$failed3" = "1" ] ; then
+			i2cset -y 2 0x2$channel 0xe5 3
+		fi
+		sum_failed=$(( sum_failed + failed0 + failed1 + failed2 + failed3 ))
+	done
+
+	a=$((sum_failed * 4))
+	if [ $a -gt $sum_all ] ; then
+		if [ $sum_failed -lt $sum_all ] ; then
+			sum_failed_4=$(( sum_failed_4 + 1 ))
+			if [ $sum_failed_4 -gt 4 ] ; then
+				/usr/bin/waas -d
+			fi
+		fi
+	else
+		sum_failed_4=0
+	fi
+
+	sleep 4
+
+	a="$(ps | grep cgminer | grep -v 'grep cgminer')"
+	if [ -z "$a" ] ; then
+		/etc/init.d/cgminer.sh restart
+	fi
+done

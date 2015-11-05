@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="cache-control" content="no-cache" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/cascade.css" />
+<!--[if IE 6]><link rel="stylesheet" type="text/css" media="screen" href="/css/ie6.css" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" type="text/css" media="screen" href="/css/ie7.css" /><![endif]-->
+<!--[if IE 8]><link rel="stylesheet" type="text/css" media="screen" href="/css/ie8.css" /><![endif]-->
+<script type="text/javascript" src="/js/xhr.js"></script>
+<script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="/js/json2.min.js"></script>
+<script>
+function f_get_network_info() {
+	$.ajax({
+		url: '/cgi-bin/get_network_info.cgi',
+		type: 'GET',
+		dataType: 'json',
+		timeout: 30000,
+		cache: false,
+		success: function(data) {
+			try
+			{
+				$("#ant_netdevice").html(data.netdevice);
+				$("#ant_macaddr").html(data.macaddr);
+				$("#ant_ipaddress").html(data.ipaddress);
+				$("#ant_netmask").html(data.netmask);
+				
+				$("#ant_conf_nettype").val(data.conf_nettype);
+				$("#ant_conf_hostname").val(data.conf_hostname);
+				$("#ant_conf_ipaddress").val(data.conf_ipaddress);
+				$("#ant_conf_netmask").val(data.conf_netmask);
+				$("#ant_conf_gateway").val(data.conf_gateway);
+				$("#ant_conf_dnsservers").val(data.conf_dnsservers);
+			}
+			catch(err)
+			{
+				alert('Invalid Network configuration file. Edit manually or reset to default.');
+			}
+		},
+		error: function() {
+			//alert('Ajax Error');
+		}
+	});
+}
+
+function f_submit_network_conf() {
+	_ant_conf_nettype = $("#ant_conf_nettype").val();
+	_ant_conf_hostname = $("#ant_conf_hostname").val();
+	_ant_conf_ipaddress = $("#ant_conf_ipaddress").val();
+	_ant_conf_netmask = $("#ant_conf_netmask").val();
+	_ant_conf_gateway = $("#ant_conf_gateway").val();
+	_ant_conf_dnsservers = $("#ant_conf_dnsservers").val();
+	
+	$("#cbi_apply_cgminer_fieldset").show();
+	
+	setTimeout(function(){
+		if(_ant_conf_nettype == "Static") {
+			window.location.href = "http://"+_ant_conf_ipaddress+"/network.html";
+		} else {
+			window.location.reload();
+		}
+	}, 30000);
+	
+	$.ajax({
+		url: '/cgi-bin/set_network_conf.cgi',
+		type: 'POST',
+		dataType: 'json',
+		timeout: 30000,
+		cache: false,
+		data: {_ant_conf_nettype:_ant_conf_nettype, _ant_conf_hostname:_ant_conf_hostname, _ant_conf_ipaddress:_ant_conf_ipaddress, _ant_conf_netmask:_ant_conf_netmask,_ant_conf_gateway:_ant_conf_gateway, _ant_conf_dnsservers:_ant_conf_dnsservers},
+		success: function(data) {
+		},
+		error: function() {
+		}
+	});
+}
+
+$(document).ready(function() {
+	f_get_network_info();
+});
+</script>
+<title>Ant Miner</title>
+</head>
+<body class="lang_en">
+	<p class="skiplink">
+		<span id="skiplink1"><a href="#navigation">Skip to navigation</a></span>
+		<span id="skiplink2"><a href="#content">Skip to content</a></span>
+	</p>
+	<div id="menubar">
+		<h2 class="navigation"><a id="navigation" name="navigation">Navigation</a></h2>
+		<div class="clear"></div>
+	</div>
+	<div id="menubar" style="background-color: #0a2b40;">
+		<div class="hostinfo" style="float: left; with: 500px;">
+			<img src="/images/antminer_logo.png" width="92" height="50" alt="" title="" border="0" />
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div id="maincontainer">
+		<div id="tabmenu">
+			<div class="tabmenu1">
+				<ul class="tabmenu l1">
+					<li class="tabmenu-item-status"><a href="/index.html">System</a></li>
+					<li class="tabmenu-item-system"><a href="/cgi-bin/minerConfiguration.cgi">Miner Configuration</a></li>
+					<li class="tabmenu-item-network"><a href="/cgi-bin/minerStatus.cgi">Miner Status</a></li>
+					<li class="tabmenu-item-network active"><a href="/network.html">Network</a></li>
+				</ul>
+				<br style="clear: both" />
+				<div class="tabmenu2">
+					<ul class="tabmenu l2">
+						<li class="tabmenu-item-system active"><a href="/network.html">Settings</a></li>
+						<li class="tabmenu-item-system"><a href="/networkDiagnostics.html">Diagnostics</a></li>
+					</ul>
+					<br style="clear: both" />
+				</div>
+			</div>
+		</div>
+		<div id="maincontent">
+			<noscript>
+				<div class="errorbox">
+					<strong>Java Script required!</strong><br /> You must enable Java Script in your browser or LuCI will not work properly.
+				</div>
+			</noscript>
+			<h2 style="padding-bottom:10px;"><a id="content" name="content">Network Settings</a></h2>
+			<div class="cbi-map" id="cbi-network">
+				<div class="cbi-map-descr">Network setup for Miner</div>
+				<fieldset class="cbi-section" id="cbi_apply_cgminer_fieldset" style="display:none">
+					<img src="/resources/icons/loading.gif" alt="Loading" style="vertical-align:middle" />
+					<span id="cbi-apply-cgminer-status">Waiting for changes to be applied...</span>
+				</fieldset>
+				<fieldset class="cbi-section" id="cbi-network-wan">
+					<div class="cbi-section-node cbi-section-node-tabbed" id="cbi-network-wan">
+						<div class="cbi-tabcontainer" id="container.network.wan.general">
+							<div class="cbi-value" id="cbi-network-wan-__status">
+								<label class="cbi-value-title" for="cbid.network.wan.__status">Status</label>
+								<div class="cbi-value-field">
+									<table>
+										<tr class="cbi-section-table">
+											<td></td>
+											<td class="cbi-value-field" style="min-width: 16px; padding: 3px; text-align: center;" id="__status-ifc-signal">
+												<img src="/resources/icons/ethernet.png" style="width: 16px; height: 16px;" /><br />
+												<small id="ant_netdevice"></small>
+											</td>
+											<td class="cbi-value-field" style="vertical-align: middle; text-align: left; padding: 3px;" id="__status-ifc-description">
+												<strong>MAC-Address:</strong><span id="ant_macaddr"></span><br />
+												<strong>IP:</strong><span id="ant_ipaddress"></span><br />
+												<strong>Netmask:</strong><span id="ant_netmask"></span><br />
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<div class="cbi-value" id="cbi-network-wan-ipaddr">
+								<label class="cbi-value-title" for="cbid.network.wan.hostname">Hostname</label>
+								<div class="cbi-value-field">
+									<input type="text" class="cbi-input-text" name="cbid.network.wan.hostname" id="ant_conf_hostname" value="" />
+								</div>
+							</div>
+							<div class="cbi-value" id="cbi-network-wan-proto">
+								<label class="cbi-value-title" for="cbid.network.wan.proto">Protocol</label>
+								<div class="cbi-value-field">
+									<select class="cbi-input-select" id="ant_conf_nettype" name="cbid.network.wan.proto" size="1">
+										<option id="cbi-network-wan-proto-static" value="Static">Static</option>
+										<option id="cbi-network-wan-proto-dhcp" value="DHCP">DHCP</option>
+									</select>
+								</div>
+							</div>
+							<div class="cbi-value" id="cbi-network-wan-ipaddr">
+								<label class="cbi-value-title" for="cbid.network.wan.ipaddr">IP Address</label>
+								<div class="cbi-value-field">
+									<input type="text" class="cbi-input-text" name="cbid.network.wan.ipaddr" id="ant_conf_ipaddress" value="" />
+								</div>
+							</div>
+							<div class="cbi-value" id="cbi-network-wan-netmask">
+								<label class="cbi-value-title" for="cbid.network.wan.netmask">Netmask</label>
+								<div class="cbi-value-field">
+									<input type="text" class="cbi-input-text" name="cbid.network.wan.netmask" id="ant_conf_netmask" value="" />
+								</div>
+							</div>
+							<div class="cbi-value" id="cbi-network-wan-gateway">
+								<label class="cbi-value-title" for="cbid.network.wan.gateway">Gateway</label>
+								<div class="cbi-value-field">
+									<input type="text" class="cbi-input-text" name="cbid.network.wan.gateway" id="ant_conf_gateway" value="" />
+								</div>
+							</div>
+							<div class="cbi-value cbi-value-last" id="cbi-network-wan-dns">
+								<label class="cbi-value-title" for="cbid.network.wan.dns">DNS Servers</label>
+								<div class="cbi-value-field">
+									<div>
+										<input class="cbi-input-text" type="text" id="ant_conf_dnsservers" name="cbid.network.wan.dns" value="" /><br />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br />
+				</fieldset>
+				<!-- /nsection -->
+				<br />
+			</div>
+			<div class="cbi-page-actions">
+				<input class="cbi-button cbi-button-save right" type="button" onclick="f_submit_network_conf();" value="Save&Apply" />
+				<input class="cbi-button cbi-button-reset right" type="button" onclick="f_get_network_info();" value="Reset" />
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div style="text-align: center; bottom: 0; left: 0; height: 1.5em; font-size: 80%; margin: 0; padding: 5px 0px 2px 8px; background-color: #918ca0; width: 100%;">
+		<font style="color:#fff;">Copyright &copy; 2013-2014, Bitmain Technologies</font>
+	</div>
+</body>
+</html>
+

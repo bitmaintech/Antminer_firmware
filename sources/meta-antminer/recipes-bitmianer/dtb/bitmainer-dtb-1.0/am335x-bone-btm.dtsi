@@ -1,0 +1,171 @@
+/*
+ * Copyright (C) 2013 CircuitCo
+ *
+ * Virtual cape for SPI1 on connector pins P9.29 P9.31 P9.30 P9.28
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+&am33xx_pinmux {
+    bb_spi0_pins: pinmux_bb_spi0_pins {
+        pinctrl-single,pins = <
+            0x150 0x30
+            0x154 0x30
+            0x158 0x10
+            0x15c 0x10
+        >;
+    };
+
+    bb_spi1_pins: pinmux_bb_spi1_pins {
+        pinctrl-single,pins = <
+            0x190 0x33 /* mcasp0_aclkx.spi1_sclk, INPUT_PULLUP | MODE3 */
+			0x194 0x17 /* mcasp0_fsx.spi1_d0, OUT_PULLUP | MODE7 */
+            0x198 0x13 /* mcasp0_axr0.spi1_d1, OUTPUT_PULLUP | MODE3 */
+            0x19c 0x13 /* mcasp0_ahclkr.spi1_cs0, OUTPUT_PULLUP | MODE3 */
+        >;
+    };
+};
+
+&spi0 {
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&bb_spi0_pins>;
+    
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    channel@0 {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        compatible = "spidev";
+
+        reg = <0>;
+        spi-max-frequency = <16000000>;
+        spi-cpha;
+    };
+};
+
+&spi1 {
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&bb_spi1_pins>;
+
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    channel@0 {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        compatible = "spidev";
+
+        reg = <0>;
+        spi-max-frequency = <16000000>;
+    };
+};
+
+
+&am33xx_pinmux {
+    bb_i2c1a1_pins: pinmux_bb_i2c1a1_pins {
+        pinctrl-single,pins = <
+	    0x180 0x73	/* uart1_rxd.i2c1_sda, SLEWCTRL_SLOW | INPUT_PULLUP | MODE3 */
+	    0x184 0x73	/* uart1_txdi2c1_scl, SLEWCTRL_SLOW | INPUT_PULLUP | MODE3 */
+	>;
+    };
+};
+	
+&i2c1 {	/* i2c1 is numbered correctly */
+    //status = "okay";
+    status = "disabled";
+	pinctrl-names = "default";
+    pinctrl-0 = <&bb_i2c1a1_pins>;
+
+    /* this is the configuration part */
+    clock-frequency = <100000>;	
+
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    i2c_bus_mux@70 {
+        compatible = "nxp,pca9547";
+	reg = <0x70>;
+        #address-cells = <1>;
+	#size-cells = <0>;
+
+	asic-board@0 {
+	    compatible = "nxp,pca954x-bus";
+            #address-cells = <1>;
+	    #size-cells = <0>;
+	    reg = <0>;
+
+	    eeprom0@50 {
+                compatible = "at,24c256";
+                reg = <0x50>;
+            };
+        };
+
+        asic-board@1 {
+            compatible = "nxp,pca954x-bus";
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <1>;
+
+            eeprom1@50 {
+                compatible = "at,24c256";
+                reg = <0x50>;
+            };
+        };
+
+        asic-board@2 {
+            compatible = "nxp,pca954x-bus";
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <2>;
+
+            eeprom2@50 {
+                compatible = "at,24c256";
+                reg = <0x50>;
+            };
+        };
+
+        asic-board@3 {
+            compatible = "nxp,pca954x-bus";
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <3>;
+
+            eeprom3@50 {
+                compatible = "at,24c256";
+                reg = <0x50>;
+            };
+        };
+
+        asic-board@4 {
+            compatible = "nxp,pca954x-bus";
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <4>;
+
+            eeprom4@50 {
+                compatible = "at,24c256";
+                reg = <0x50>;
+            };
+        };
+
+        asic-board@5 {
+            compatible = "nxp,pca954x-bus";
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <5>;
+
+            eeprom5@50 {
+                compatible = "at,24c256";
+                reg = <0x50>;
+            };
+        };
+    };
+};  
+    

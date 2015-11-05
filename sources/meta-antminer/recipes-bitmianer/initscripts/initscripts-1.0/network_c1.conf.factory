@@ -1,0 +1,5 @@
+hostname=antMiner
+ipaddress=192.168.1.99
+netmask=255.255.255.0
+gateway=192.168.1.1
+dnsservers="192.168.1.1"

@@ -1,0 +1,45 @@
+# LAYER_CONF_VERSION is increased each time build/conf/bblayers.conf
+# changes incompatibly
+LCONF_VERSION = "5"
+TOPDIR := "${@os.path.dirname(os.path.dirname(d.getVar('FILE', True)))}"
+
+BBPATH = "${TOPDIR}"
+
+BBFILES = ""
+
+# These layers hold recipe metadata not found in OE-core, but lack any machine or distro content
+BASELAYERS ?= " \
+  ${TOPDIR}/sources/meta-openembedded/meta-oe \
+  ${TOPDIR}/sources/meta-openembedded/meta-efl \
+  ${TOPDIR}/sources/meta-openembedded/meta-gpe \
+  ${TOPDIR}/sources/meta-openembedded/meta-gnome \
+  ${TOPDIR}/sources/meta-openembedded/meta-xfce \
+  ${TOPDIR}/sources/meta-openembedded/meta-initramfs \
+  ${TOPDIR}/sources/meta-openembedded/toolchain-layer \
+  ${TOPDIR}/sources/meta-openembedded/meta-multimedia \
+  ${TOPDIR}/sources/meta-openembedded/meta-networking \
+  ${TOPDIR}/sources/meta-openembedded/meta-webserver \
+  ${TOPDIR}/sources/meta-openembedded/meta-ruby \
+"
+
+# These layers hold machine specific content, aka Board Support Packages
+BSPLAYERS ?= " \
+  ${TOPDIR}/sources/meta-beagleboard/common-bsp \
+  ${TOPDIR}/sources/meta-ti \
+"
+
+# Add your overlay location to EXTRALAYERS
+# Make sure to have a conf/layers.conf in there
+EXTRALAYERS ?= " \
+  ${TOPDIR}/sources/meta-linaro/meta-linaro \
+  ${TOPDIR}/sources/meta-linaro/meta-linaro-toolchain \
+  ${TOPDIR}/sources/meta-s3 \
+"
+
+BBLAYERS = " \
+  ${TOPDIR}/sources/meta-angstrom \
+  ${BASELAYERS} \
+  ${BSPLAYERS} \
+  ${EXTRALAYERS} \
+  ${TOPDIR}/sources/openembedded-core/meta \
+  "

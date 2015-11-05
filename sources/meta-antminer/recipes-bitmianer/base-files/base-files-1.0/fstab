@@ -1,0 +1,5 @@
+#rootfs               /                    auto       defaults              1  1
+proc                 /proc                proc       defaults              0  0
+devpts               /dev/pts             devpts     mode=0620,gid=5       0  0
+#tmpfs                /tmp                 tmpfs      defaults              0  0
+/dev/mmcblk0p3       /config                auto       defaults,sync  0  0
