@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head> 	
+<head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
 <meta http-equiv="cache-control" content="no-cache" />
@@ -62,32 +62,6 @@ function f_get_miner_conf() {
 			//alert('Ajax Error');
 		}
 	});
-	
-	$.ajax({
-		url: '/cgi-bin/get_auto_freq_conf.cgi',
-		type: 'GET',
-		dataType: 'json',
-		timeout: 30000,
-		cache: false,
-		success: function(data) {
-			try
-			{
-				if(data.ant_frequency_auto=="on") {
-					document.getElementById("ant_frequency_auto").checked = true;
-				} else {
-					document.getElementById("ant_frequency_auto").checked = false;
-				}
-				ant_frequency_auto = data.ant_frequency_auto;
-			}
-			catch(err)
-			{
-				alert('Invalid auto_freq_conf file. Edit manually or reset to default.');
-			}
-		},
-		error: function() {
-			//alert('Ajax Error');
-		}
-	});
 }
 function f_submit_miner_conf() {
 	_ant_pool1url = $("#ant_pool1url").val();
@@ -113,13 +87,6 @@ function f_submit_miner_conf() {
 		_ant_tempoverctrl = "false";
 	}
 	
-	if(document.getElementById("ant_frequency_auto").checked) {
-		_ant_frequency_auto = "on";
-	} else {
-		_ant_frequency_auto = "off";
-	}
-	if(ant_frequency_auto==_ant_frequency_auto)
-		_ant_frequency_auto="";
 	$("#cbi_apply_cgminer_fieldset").show();
 	
 	$.ajax({
@@ -128,7 +95,7 @@ function f_submit_miner_conf() {
 		dataType: 'json',
 		timeout: 30000,
 		cache: false,
-		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_beeper:_ant_beeper, _ant_tempoverctrl:_ant_tempoverctrl,_ant_frequency_auto:_ant_frequency_auto},
+		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_beeper:_ant_beeper, _ant_tempoverctrl:_ant_tempoverctrl},
 		success: function(data) {
 			window.location.reload();
 		},
@@ -139,7 +106,6 @@ function f_submit_miner_conf() {
 }
 
 $(document).ready(function() {
-	ant_frequency_auto;
 	f_get_miner_conf();
 });
 </script>
@@ -255,22 +221,16 @@ $(document).ready(function() {
 					</fieldset>
 					<fieldset class="cbi-section" id="cbi-cgminer-default">
 						<legend>Setup</legend>
-						<div class="cbi-value" id="cbi-cgminer-default-pool3url">
+						<div class="cbi-value" id="cbi-cgminer-default-pool3url" style="display:none">
 							<label class="cbi-value-title" for="keep">Beeper ringing</label>
 							<div class="cbi-value-field">
 								<input type="checkbox" name="ant_beeper" id="ant_beeper" checked />
 							</div>
 						</div>
 						<div class="cbi-value" id="cbi-cgminer-default-pool3user">
-							<label class="cbi-value-title" for="keep">Stop running when temprerature is over 80â„ƒ</label>
+							<label class="cbi-value-title" for="keep">Stop running when temprerature is over 80â„?/label>
 							<div class="cbi-value-field">
 								<input type="checkbox" name="ant_tempoverctrl" id="ant_tempoverctrl" checked />
-							</div>
-						</div>
-						<div class="cbi-value" id="cbi-cgminer-default-fre-auto">
-							<label class="cbi-value-title" for="keep">Auto overclock</label>
-							<div class="cbi-value-field">
-								<input type="checkbox" name="ant_frequency_auto" id="ant_frequency_auto"/>
 							</div>
 						</div>
 					</fieldset>

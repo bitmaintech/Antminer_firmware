@@ -8,5 +8,6 @@ if [ x"S4" == x"${Miner_TYPE}" -o x"S2" == x"${Miner_TYPE}" ]; then
 echo "mlcd:2345:respawn:${base_sbindir}/minerlcd" >> ${D}${sysconfdir}/inittab
 fi
 echo "moni:2345:respawn:${base_sbindir}/miner-m.sh" >> ${D}${sysconfdir}/inittab
+echo "rrst:2345:once:${base_sbindir}/reset.sh" >> ${D}${sysconfdir}/inittab
 }
 

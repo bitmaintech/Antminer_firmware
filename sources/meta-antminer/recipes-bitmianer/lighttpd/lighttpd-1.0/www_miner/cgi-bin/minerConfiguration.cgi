@@ -35,17 +35,6 @@ EOF
 ) > /config/cgminer.conf
 }
 
-create_default_auto_fre_file()
-{
-(
-cat <<'EOF'
-{
-"ant_frequency_auto" : "on"
-}
-EOF
-) > /config/auto_freq.conf
-}
-
 if [ ! -f /config/cgminer.conf ] ; then
     if [ -f /config/cgminer.conf.factory ] ; then
 		cp /config/cgminer.conf.factory /config/cgminer.conf
@@ -54,12 +43,8 @@ if [ ! -f /config/cgminer.conf ] ; then
     fi
 fi
 
-if [ ! -f /config/auto_freq.conf ] ; then
-	create_default_auto_fre_file
-fi
-
 ant_result=`cat /config/cgminer.conf`
-ant_auto_freq=`cat /config/auto_freq.conf`
+
 # CGI output must start with at least empty line (or headers)
 printf "Content-type: text/html\r\n\r\n"
 
@@ -82,7 +67,7 @@ cat <<-EOH
 EOH
 
 echo "ant_data = ${ant_result};"
-echo "ant_auto_freq = ${ant_auto_freq};"
+
 cat <<EOT
 function f_get_miner_conf() {
 	try
@@ -116,12 +101,14 @@ function f_get_miner_conf() {
 		} else {
 			document.getElementById("ant_tempoverctrl").checked = true;
 		}
-		if(ant_auto_freq.ant_frequency_auto=="on") {
-					document.getElementById("ant_frequency_auto").checked = true;
+		if(ant_data["bitmain-fan-ctrl"]) {
+			document.getElementById("ant_fan_customize_switch").checked = true;
+		
 		} else {
-			document.getElementById("ant_frequency_auto").checked = false;
+			document.getElementById("ant_fan_customize_switch").checked = false;
 		}
-		ant_frequency_auto = ant_auto_freq.ant_frequency_auto;
+		jQuery("#ant_fan_customize_value").val(ant_data["bitmain-fan-pwm"]);
+
 	}
 	catch(err)
 	{
@@ -152,6 +139,8 @@ function f_submit_miner_conf() {
 	_ant_pool3pw = jQuery("#ant_pool3pw").val();
 	_ant_nobeeper = "false";
 	_ant_notempoverctrl = "false";
+	_ant_fan_customize_switch = "false";
+	_ant_fan_customize_value = jQuery("#ant_fan_customize_value").val();
 	
 	if(document.getElementById("ant_beeper").checked) {
 		_ant_nobeeper = "false";
@@ -163,14 +152,15 @@ function f_submit_miner_conf() {
 	} else {
 		_ant_notempoverctrl = "true";
 	}
-	
-	if(document.getElementById("ant_frequency_auto").checked) {
-		_ant_frequency_auto = "on";
+
+	if(document.getElementById("ant_fan_customize_switch").checked) {
+		_ant_fan_customize_switch= "true";
+		
 	} else {
-		_ant_frequency_auto = "off";
+		_ant_fan_customize_switch= "false";
 	}
-	if(ant_frequency_auto==_ant_frequency_auto)
-		_ant_frequency_auto="";
+
+	
 	jQuery("#cbi_apply_cgminer_fieldset").show();
 	
 	jQuery.ajax({
@@ -179,8 +169,7 @@ function f_submit_miner_conf() {
 		dataType: 'json',
 		timeout: 30000,
 		cache: false,
-		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_nobeeper:_ant_nobeeper, _ant_notempoverctrl:_ant_notempoverctrl, _ant_freq:_ant_freq, _ant_voltage:_ant_voltage,
-		_ant_frequency_auto:_ant_frequency_auto},
+		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_nobeeper:_ant_nobeeper, _ant_notempoverctrl:_ant_notempoverctrl,_ant_fan_customize_switch:_ant_fan_customize_switch,_ant_fan_customize_value:_ant_fan_customize_value, _ant_freq:_ant_freq, _ant_voltage:_ant_voltage},
 		success: function(data) {
 			window.location.reload();
 		},
@@ -191,7 +180,6 @@ function f_submit_miner_conf() {
 }
 
 jQuery(document).ready(function() {
-	ant_frequency_auto;
 	f_get_miner_conf();
 });
 </script>
@@ -315,24 +303,27 @@ jQuery(document).ready(function() {
 					</fieldset>
 					<fieldset class="cbi-section" id="cbi-cgminer-default">
 						<legend>Setup</legend>
-						<div class="cbi-value" id="cbi-cgminer-default-pool3url">
+						<div class="cbi-value" id="beep" style="display:none">
 							<label class="cbi-value-title" for="keep">Beeper ringing</label>
 							<div class="cbi-value-field">
 								<input type="checkbox" name="ant_beeper" id="ant_beeper" checked />
 							</div>
 						</div>
-						<div class="cbi-value" id="cbi-cgminer-default-pool3user">
+						<div class="cbi-value" id="temp_over">
 							<label class="cbi-value-title" for="keep">Stop running when temprerature is over 80&#8451; </label>
 							<div class="cbi-value-field">
 								<input type="checkbox" name="ant_tempoverctrl" id="ant_tempoverctrl" checked />
 							</div>
 						</div>
-						<div class="cbi-value" id="cbi-cgminer-default-fre-auto">
-							<label class="cbi-value-title" for="keep">Auto overclock</label>
+						<div class="cbi-value" id="fan_ctrl">
+							<label class="cbi-value-title" for="keep">Customize the fan speed percentage</label>
 							<div class="cbi-value-field">
-								<input type="checkbox" name="ant_frequency_auto" id="ant_frequency_auto"/>
+								<input type="checkbox" name="ant_fan_customize_check" id="ant_fan_customize_switch" />
+								<input type="text" class="cbi-input-text" style="width:30px;" name="ant_fan_customize_box" id="ant_fan_customize_value" value="" />%
+
 							</div>
 						</div>
+
 					</fieldset>
 					<br />
 				</fieldset>

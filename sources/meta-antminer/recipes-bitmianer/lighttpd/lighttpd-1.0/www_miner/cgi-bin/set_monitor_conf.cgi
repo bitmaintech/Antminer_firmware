@@ -78,6 +78,7 @@ sleep 1s
   exec miner-monitor & 
   echo "restart minermonitor again!"  
 
+ 
 
 sleep 1s 
 echo "ok"

@@ -92,6 +92,9 @@ function f_submit_miner_conf() {
 	_ant_pool3pw = "123";
 	_ant_nobeeper = "false";
 	_ant_notempoverctrl = "false";
+	_ant_fan_customize_switch = "false";
+	_ant_fan_customize_value = "100";
+
 	try
 	{
 		for(var i = 0; i < ant_data.pools.length; i++) {
@@ -123,6 +126,13 @@ function f_submit_miner_conf() {
 		} else {
 			_ant_notempoverctrl = "false";
 		}
+		if(ant_data["bitmain-fan-ctrl"]) {                                                           
+                        _ant_fan_customize_switch = "true";                                                  
+                        _ant_fan_customize_value = ant_data["bitmain-fan-pwm"];                              
+                } else {                                                                                     
+                        _ant_fan_customize_switch = "false";                                                 
+                        _ant_fan_customize_value = "";                                                       
+                }    
 	}
 	catch(err)
 	{
@@ -140,7 +150,7 @@ function f_submit_miner_conf() {
 		dataType: 'json',
 		timeout: 30000,
 		cache: false,
-		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_nobeeper:_ant_nobeeper, _ant_notempoverctrl:_ant_notempoverctrl, _ant_freq:_ant_freq},
+		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_nobeeper:_ant_nobeeper, _ant_notempoverctrl:_ant_notempoverctrl,_ant_fan_customize_switch:_ant_fan_customize_switch,_ant_fan_customize_value:_ant_fan_customize_value, _ant_freq:_ant_freq},
 		success: function(data) {
 			window.location.reload();
 		},
@@ -174,7 +184,7 @@ jQuery(document).ready(function() {
 	<div id="maincontainer">
 		<div id="tabmenu">
 			<div class="tabmenu1">
-<ul class="tabmenu l1">
+				<ul class="tabmenu l1">
 					<li class="tabmenu-item-status"><a href="/index.html">System</a></li>
 					<li class="tabmenu-item-system active"><a href="/cgi-bin/minerConfiguration.cgi">Miner Configuration</a></li>
 					<li class="tabmenu-item-network"><a href="/cgi-bin/minerStatus.cgi">Miner Status</a></li>

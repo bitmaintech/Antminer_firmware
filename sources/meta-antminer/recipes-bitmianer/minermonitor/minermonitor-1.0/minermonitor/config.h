@@ -13,7 +13,7 @@
 #define S4_WRITE    //Read and write s4 configuration files
 
 #ifndef MINERTYPE
-#define MINERTYPE 5 //s5 default
+#define MINERTYPE 7 //s5 default
 #endif // MINERTYPE
 #ifndef ETH
 #define ETH "eth0"

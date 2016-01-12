@@ -28,7 +28,7 @@ cat <<'EOF'
 "api-network" : true,
 "api-allow" : "W:0/0",
 "bitmain-freq": "7:200:0782",
-"bitmain-voltage": "0725"
+"bitmain-voltage": ""
 }
 
 EOF
@@ -73,7 +73,7 @@ function f_get_miner_conf() {
 	try
 	{
 		document.getElementById("ant_freq").value=ant_data["bitmain-freq"];
-		document.getElementById("ant_voltage").value=ant_data["bitmain-voltage"];
+
 	}
 	catch(err)
 	{
@@ -92,6 +92,9 @@ function f_submit_miner_conf() {
 	_ant_pool3pw = "123";
 	_ant_nobeeper = "false";
 	_ant_notempoverctrl = "false";
+	_ant_fan_customize_switch = "false";
+	_ant_fan_customize_value = "100";
+
 	try
 	{
 		for(var i = 0; i < ant_data.pools.length; i++) {
@@ -123,24 +126,31 @@ function f_submit_miner_conf() {
 		} else {
 			_ant_notempoverctrl = "false";
 		}
+		if(ant_data["bitmain-fan-ctrl"]) {                                                           
+                        _ant_fan_customize_switch = "true";                                                  
+                        _ant_fan_customize_value = ant_data["bitmain-fan-pwm"];                              
+                } else {                                                                                     
+                        _ant_fan_customize_switch = "false";                                                 
+                        _ant_fan_customize_value = "";                                                       
+                }    
 	}
 	catch(err)
 	{
 		alert('Invalid Miner configuration file. Edit manually or reset to default.'+err);
 	}
-	
+
 	_ant_freq=jQuery("#ant_freq").val();
-	_ant_voltage=jQuery("#ant_voltage").val();
-	
+
+
 	jQuery("#cbi_apply_cgminer_fieldset").show();
-	
+
 	jQuery.ajax({
 		url: '/cgi-bin/set_miner_conf.cgi',
 		type: 'POST',
 		dataType: 'json',
 		timeout: 30000,
 		cache: false,
-		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_nobeeper:_ant_nobeeper, _ant_notempoverctrl:_ant_notempoverctrl, _ant_freq:_ant_freq, _ant_voltage:_ant_voltage},
+		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_nobeeper:_ant_nobeeper, _ant_notempoverctrl:_ant_notempoverctrl,_ant_fan_customize_switch:_ant_fan_customize_switch,_ant_fan_customize_value:_ant_fan_customize_value, _ant_freq:_ant_freq},
 		success: function(data) {
 			window.location.reload();
 		},
@@ -214,18 +224,6 @@ jQuery(document).ready(function() {
 							<label class="cbi-value-title" for="cbid.cgminer.default.freq">Frequency</label>
 							<div class="cbi-value-field">
 								<select id="ant_freq" class="cbi-input-text">
-								    <option value="5:2275:0a82">275M</option>
-								    <option value="5:268.75:1506">268.75M</option>    						
-    								<option value="5:262.5:0a02">262.5M</option> 
-								    <option value="6:256.25:1406">256.25M</option>    						
-    								<option value="6:250:0982">250M</option>    								
-    								<option value="6:243.75:1306">243.75M</option>
-    								<option value="6:237.5:1286">237.5M</option>
-    								<option value="5:231.25:1206">231.25M</option>
-    								<option value="5:225:0882">225M</option>
-    								<option value="5:218.75:1106">218.75M</option>
-    								<option value="6:212.5:1086">212.5M</option>
-    								<option value="6:206.25:1006">206.25M</option>
     								<option value="6:200:0782">200M (default)</option>    								
     								<option value="6:193.75:0f03">193.75M</option>
     								<option value="6:187.5:0e83">187.5M</option>
@@ -246,10 +244,10 @@ jQuery(document).ready(function() {
     							</select>
 							</div>
 						</div>
-						<div class="cbi-value" id="cbi-cgminer-default-voltage">
+						<div class="cbi-value" id="cbi-cgminer-default-voltage" style="display:none">
 							<label class="cbi-value-title" for="cbid.cgminer.default.pool3url">Voltage</label>
 							<div class="cbi-value-field">
-								<input type="text" class="cbi-input-text" name="cbid.cgminer.default.voltage" id="ant_voltage" value="" />
+								<input type="text" class="cbi-input-text" name="cbid.cgminer.default.voltage" id="ant_voltage" value="0706" />
 								<span style="color:red;">Modify voltage and Save&Apply, then need to Power off and Restart</span>
 							</div>
 						</div>

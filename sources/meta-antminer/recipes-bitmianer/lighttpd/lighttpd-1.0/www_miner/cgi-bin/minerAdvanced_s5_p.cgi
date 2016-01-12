@@ -92,6 +92,9 @@ function f_submit_miner_conf() {
 	_ant_pool3pw = "123";
 	_ant_nobeeper = "false";
 	_ant_notempoverctrl = "false";
+	_ant_fan_customize_switch = "false";
+	_ant_fan_customize_value = "100";
+
 	try
 	{
 		for(var i = 0; i < ant_data.pools.length; i++) {
@@ -123,6 +126,13 @@ function f_submit_miner_conf() {
 		} else {
 			_ant_notempoverctrl = "false";
 		}
+		if(ant_data["bitmain-fan-ctrl"]) {                                                           
+                        _ant_fan_customize_switch = "true";                                                  
+                        _ant_fan_customize_value = ant_data["bitmain-fan-pwm"];                              
+                } else {                                                                                     
+                        _ant_fan_customize_switch = "false";                                                 
+                        _ant_fan_customize_value = "";                                                       
+                }    
 	}
 	catch(err)
 	{
@@ -140,7 +150,7 @@ function f_submit_miner_conf() {
 		dataType: 'json',
 		timeout: 30000,
 		cache: false,
-		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_nobeeper:_ant_nobeeper, _ant_notempoverctrl:_ant_notempoverctrl, _ant_freq:_ant_freq},
+		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_nobeeper:_ant_nobeeper, _ant_notempoverctrl:_ant_notempoverctrl,_ant_fan_customize_switch:_ant_fan_customize_switch,_ant_fan_customize_value:_ant_fan_customize_value, _ant_freq:_ant_freq},
 		success: function(data) {
 			window.location.reload();
 		},
@@ -174,7 +184,7 @@ jQuery(document).ready(function() {
 	<div id="maincontainer">
 		<div id="tabmenu">
 			<div class="tabmenu1">
-<ul class="tabmenu l1">
+				<ul class="tabmenu l1">
 					<li class="tabmenu-item-status"><a href="/index.html">System</a></li>
 					<li class="tabmenu-item-system active"><a href="/cgi-bin/minerConfiguration.cgi">Miner Configuration</a></li>
 					<li class="tabmenu-item-network"><a href="/cgi-bin/minerStatus.cgi">Miner Status</a></li>
@@ -214,64 +224,123 @@ jQuery(document).ready(function() {
 							<label class="cbi-value-title" for="cbid.cgminer.default.freq">Frequency</label>
 							<div class="cbi-value-field">
 								<select id="ant_freq" class="cbi-input-text">
-								<option value="3:500:0981">500M</option>
-								<option value="3:487.5:1305">487.5M</option>
-								<option value="3:475:0901">475M</option>
-								<option value="3:462.5:1205">462.5M</option>
-								<option value="3:450:0881">450M</option>
-								<option value="3:437.5:1105">437.5M</option>
-								<option value="3:425:0801">425M</option>
-								<option value="3:412.5:1005">412.5M</option>
-								<option value="3:400:0f82">400M</option>
-								<option value="3:393.75:1f06">393.75M</option>
-								<option value="3:387.5:0f02">387.5M</option>
-								<option value="3:381.25:1e06">381.25M</option>
-								<option value="3:375:0e82">375M</option>
-								<option value="3:368.75:1d06">368.75M</option>
-								<option value="3:362.5:0e02">362.5M</option>
-								<option value="3:356.25:1c06">356.25M</option>
-								<option value="3:350:0d82">350M</option>
-								<option value="3:343.75:1b06">343.75M</option>
-								<option value="3:337.5:0d02">337.5M</option>
-								<option value="3:331.25:1a06">331.25M</option>
-								<option value="4:325:0c82">325M(default)</option>
-								<option value="4:318.75:1906">318.75M</option>
-								<option value="4:312.5:0c02">312.5M</option>
-								<option value="4:306.25:1806">306.25M</option>
-								<option value="4:300:0b82">300M</option>
-								<option value="4:293.75:1706">293.75M</option>
-								<option value="4:287.5:0b02">287.5M</option>
-								<option value="4:281.25:1606">281.25M</option>
-								<option value="4:275:0a82">275M</option>
-								<option value="4:268.75:1506">268.75M</option>
-								<option value="4:262.5:0a02">262.5M</option>
-								<option value="5:256.25:1406">256.25M</option>
-								<option value="5:250:0982">250M</option>
-								<option value="5:243.75:1306">243.75M</option>
-								<option value="5:237.5:1286">237.5M</option>
-								<option value="5:231.25:1206">231.25M</option>
-								<option value="5:225:0882">225M</option>
-								<option value="5:218.75:1106">218.75M</option>
-								<option value="6:212.5:1086">212.5M</option>
-								<option value="6:206.25:1006">206.25M</option>
-								<option value="6:200:0782">200M</option>
-								<option value="6:193.75:0f03">193.75M</option>
-								<option value="6:187.5:0e83">187.5M</option>
-								<option value="7:181.25:0e03">181.25M</option>
-								<option value="7:175:0d83">175M</option>
-								<option value="7:168.75:1a87">168.75M</option>
-								<option value="7:162.5:0c83">162.5M</option>
-								<option value="8:156.25:0c03">156.25M</option>
-								<option value="8:150:0b83">150M</option>
-								<option value="8:143.75:1687">143.75M</option>
-								<option value="9:137.5:0a83">137.5M</option>
-								<option value="9:131.25:0a03">131.25M</option>
-								<option value="10:125:0983">125M</option>
-								<option value="10:118.75:0903">118.75M</option>
-								<option value="10:112.5:0883">112.5M</option>
-								<option value="10:106.25:0803">106.25M</option>
-								<option value="10:100:0783">100M</option>
-    							</select>
+<option value="100"> 100.00M </option>
+<option value="125"> 125.00M </option>
+<option value="150"> 150.00M </option>
+<option value="175"> 175.00M </option>
+<option value="200"> 200.00M </option>
+<option value="225"> 225.00M </option>
+<option value="250"> 250.00M </option>
+<option value="275"> 275.00M </option>
+<option value="300"> 300.00M </option>
+<option value="325"> 325.00M </option>
+<option value="350"> 350.00M </option>
+<option value="375"> 375.00M </option>
+<option value="400"> 400.00M </option>
+<option value="404"> 404.17M </option>
+<option value="406"> 406.25M </option>
+<option value="408"> 408.33M </option>
+<option value="412"> 412.50M </option>
+<option value="416"> 416.67M </option>
+<option value="418"> 418.75M </option>
+<option value="420"> 420.83M </option>
+<option value="425"> 425.00M </option>
+<option value="429"> 429.17M </option>
+<option value="431"> 431.25M </option>
+<option value="433"> 433.33M </option>
+<option value="437"> 437.50M </option>
+<option value="437"> 437.50M </option>
+<option value="441"> 441.67M </option>
+<option value="443"> 443.75M </option>
+<option value="445"> 445.83M </option>
+<option value="450"> 450.00M </option>
+<option value="454"> 454.17M </option>
+<option value="456"> 456.25M </option>
+<option value="458"> 458.33M </option>
+<option value="462"> 462.50M </option>
+<option value="466"> 466.67M </option>
+<option value="468"> 468.75M </option>
+<option value="470"> 470.83M </option>
+<option value="475"> 475.00M </option>
+<option value="479"> 479.17M </option>
+<option value="481"> 481.25M </option>
+<option value="483"> 483.33M </option>
+<option value="487"> 487.50M </option>
+<option value="491"> 491.67M </option>
+<option value="493"> 493.75M </option>
+<option value="495"> 495.83M </option>
+<option value="500"> 500.00M </option>
+<option value="504"> 504.17M </option>
+<option value="506"> 506.25M </option>
+<option value="508"> 508.33M </option>
+<option value="512"> 512.50M </option>
+<option value="516"> 516.67M </option>
+<option value="518"> 518.75M </option>
+<option value="520"> 520.83M </option>
+<option value="525"> 525.00M </option>
+<option value="529"> 529.17M </option>
+<option value="531"> 531.25M </option>
+<option value="533"> 533.33M </option>
+<option value="537"> 537.50M </option>
+<option value="543"> 543.75M </option>
+<option value="550"> 550.00M </option>
+<option value="556"> 556.25M </option>
+<option value="562"> 562.50M </option>
+<option value="568"> 568.75M </option>
+<option value="575"> 575.00M </option>
+<option value="581"> 581.25M </option>
+<option value="587"> 587.50M </option>
+<option value="593"> 593.75M </option>
+<option value="600"> 600.00M </option>
+<option value="606"> 606.25M </option>
+<option value="612"> 612.50M </option>
+<option value="618"> 618.75M </option>
+<option value="625"> 625.00M </option>
+<option value="631"> 631.25M </option>
+<option value="637"> 637.50M </option>
+<option value="643"> 643.75M </option>
+<option value="650"> 650.00M </option>
+<option value="656"> 656.25M </option>
+<option value="662"> 662.50M </option>
+<option value="668"> 668.75M </option>
+<option value="675"> 675.00M </option>
+<option value="681"> 681.25M </option>
+<option value="687"> 687.50M </option>
+<option value="693"> 693.75M </option>
+<option value="700"> 700.00M </option>
+<option value="706"> 706.25M </option>
+<option value="712"> 712.50M </option>
+<option value="718"> 718.75M </option>
+<option value="725"> 725.00M </option>
+<option value="731"> 731.25M </option>
+<option value="737"> 737.50M </option>
+<option value="743"> 743.75M </option>
+<option value="750"> 750.00M </option>
+<option value="756"> 756.25M </option>
+<option value="762"> 762.50M </option>
+<option value="768"> 768.75M </option>
+<option value="775"> 775.00M </option>
+<option value="781"> 781.25M </option>
+<option value="787"> 787.50M </option>
+<option value="793"> 793.75M </option>
+<option value="800"> 800.00M </option>
+<option value="812"> 812.50M </option>
+<option value="825"> 825.00M </option>
+<option value="837"> 837.50M </option>
+<option value="850"> 850.00M </option>
+<option value="862"> 862.50M </option>
+<option value="875"> 875.00M </option>
+<option value="887"> 887.50M </option>
+<option value="900"> 900.00M </option>
+<option value="912"> 912.50M </option>
+<option value="925"> 925.00M </option>
+<option value="937"> 937.50M </option>
+<option value="950"> 950.00M </option>
+<option value="962"> 962.50M </option>
+<option value="975"> 975.00M </option>
+<option value="987"> 987.50M </option>
+<option value="1000"> 1000.00M </option>
+     							</select>
 							</div>
 						</div>
 

@@ -768,6 +768,8 @@ ant_fan1=0
 ant_fan2=0
 ant_fan3=0
 ant_fan4=0
+ant_fan5=0
+ant_fan6=0
 
 ant_tmp=`cgminer-api -o stats`
 if [ "${ant_tmp}" != "Socket connect failed: Connection refused" ]; then
@@ -790,9 +792,6 @@ if [ "${ant_tmp}" != "Socket connect failed: Connection refused" ]; then
 		ant_chain_acn=${ant_tmp#*chain_acn1=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn2=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then		
-			ant_fan=${ant_tmp#*fan1=}
-			ant_fan=${ant_fan%%,fan2=*}
-			ant_fan1=${ant_fan}
 		
 			ant_temp=${ant_tmp#*temp1=}
 			ant_temp=${ant_temp%%,temp2=*}
@@ -836,10 +835,7 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn2=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn3=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then		
-			ant_fan=${ant_tmp#*fan2=}
-			ant_fan=${ant_fan%%,fan3=*}
-			ant_fan2=${ant_fan}
-		
+
 			ant_temp=${ant_tmp#*temp2=}
 			ant_temp=${ant_temp%%,temp3=*}
 		
@@ -882,10 +878,7 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn3=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn4=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then		
-			ant_fan=${ant_tmp#*fan3=}
-			ant_fan=${ant_fan%%,fan4=*}
-			ant_fan3=${ant_fan}
-		
+
 			ant_temp=${ant_tmp#*temp3=}
 			ant_temp=${ant_temp%%,temp4=*}
 		
@@ -928,9 +921,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn4=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn5=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan4=}
-			ant_fan=${ant_fan%%,fan5=*}
-			ant_fan4=${ant_fan}
 		
 			ant_temp=${ant_tmp#*temp4=}
 			ant_temp=${ant_temp%%,temp5=*}
@@ -974,12 +964,10 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn5=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn6=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan5=}
-			ant_fan=${ant_fan%%,fan6=*}
-		
+
 			ant_temp=${ant_tmp#*temp5=}
 			ant_temp=${ant_temp%%,temp6=*}
-		
+			
 			ant_chain_acs=${ant_tmp#*chain_acs5=}
 			ant_chain_acs=${ant_chain_acs%%,chain_acs6=*}
 			
@@ -991,7 +979,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-asic\">${ant_chain_acn}</div>"
 			echo "<div id=\"cbip-table-1-asic\"></div>"
-			echo "</td>"
 			echo "</td>"
 #2014-10-16##################################################################################### 
 ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
@@ -1020,9 +1007,8 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn6=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn7=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan6=}
-			ant_fan=${ant_fan%%,fan7=*}
-		
+			
+
 			ant_temp=${ant_tmp#*temp6=}
 			ant_temp=${ant_temp%%,temp7=*}
 		
@@ -1065,8 +1051,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn7=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn8=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan7=}
-			ant_fan=${ant_fan%%,fan8=*}
 		
 			ant_temp=${ant_tmp#*temp7=}
 			ant_temp=${ant_temp%%,temp8=*}
@@ -1082,7 +1066,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-asic\">${ant_chain_acn}</div>"
 			echo "<div id=\"cbip-table-1-asic\"></div>"
-			echo "</td>"
 			echo "</td>"
 #2014-10-16##################################################################################### 
 ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
@@ -1111,9 +1094,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn8=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn9=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan8=}
-			ant_fan=${ant_fan%%,fan9=*}
-		
 			ant_temp=${ant_tmp#*temp8=}
 			ant_temp=${ant_temp%%,temp9=*}
 		
@@ -1128,12 +1108,11 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-asic\">${ant_chain_acn}</div>"
 			echo "<div id=\"cbip-table-1-asic\"></div>"
-			echo "</td>"
-			echo "<td class=\"cbi-value-field\">"
-			echo "</td>"
+			echo "</td>"		
 #2014-10-16##################################################################################### 
 ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 ###############################################################################################
+			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-frequency\">${ant_freq_split}</div>"
 			echo "<div id=\"cbip-table-1-frequency\"></div>"
 			echo "</td>"
@@ -1157,9 +1136,7 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn9=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn10=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan9=}
-			ant_fan=${ant_fan%%,fan10=*}
-		
+
 			ant_temp=${ant_tmp#*temp9=}
 			ant_temp=${ant_temp%%,temp10=*}
 		
@@ -1174,7 +1151,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-asic\">${ant_chain_acn}</div>"
 			echo "<div id=\"cbip-table-1-asic\"></div>"
-			echo "</td>"
 			echo "</td>"
 #2014-10-16##################################################################################### 
 ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
@@ -1203,8 +1179,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn10=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn11=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan10=}
-			ant_fan=${ant_fan%%,fan11=*}
 		
 			ant_temp=${ant_tmp#*temp10=}
 			ant_temp=${ant_temp%%,temp11=*}
@@ -1220,7 +1194,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-asic\">${ant_chain_acn}</div>"
 			echo "<div id=\"cbip-table-1-asic\"></div>"
-			echo "</td>"
 			echo "</td>"
 #2014-10-16##################################################################################### 
 ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
@@ -1249,9 +1222,7 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn11=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn12=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan11=}
-			ant_fan=${ant_fan%%,fan12=*}
-		
+
 			ant_temp=${ant_tmp#*temp11=}
 			ant_temp=${ant_temp%%,temp12=*}
 		
@@ -1266,7 +1237,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-asic\">${ant_chain_acn}</div>"
 			echo "<div id=\"cbip-table-1-asic\"></div>"
-			echo "</td>"
 			echo "</td>"
 #2014-10-16##################################################################################### 
 ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
@@ -1295,8 +1265,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn12=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn13=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan12=}
-			ant_fan=${ant_fan%%,fan13=*}
 		
 			ant_temp=${ant_tmp#*temp12=}
 			ant_temp=${ant_temp%%,temp13=*}
@@ -1312,7 +1280,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-asic\">${ant_chain_acn}</div>"
 			echo "<div id=\"cbip-table-1-asic\"></div>"
-			echo "</td>"
 			echo "</td>"
 #2014-10-16##################################################################################### 
 ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
@@ -1341,8 +1308,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn13=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn14=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan13=}
-			ant_fan=${ant_fan%%,fan14=*}
 		
 			ant_temp=${ant_tmp#*temp13=}
 			ant_temp=${ant_temp%%,temp14=*}
@@ -1358,7 +1323,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-asic\">${ant_chain_acn}</div>"
 			echo "<div id=\"cbip-table-1-asic\"></div>"
-			echo "</td>"
 			echo "</td>"
 #2014-10-16##################################################################################### 
 ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
@@ -1387,9 +1351,7 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn14=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn15=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan14=}
-			ant_fan=${ant_fan%%,fan15=*}
-		
+
 			ant_temp=${ant_tmp#*temp14=}
 			ant_temp=${ant_temp%%,temp15=*}
 		
@@ -1404,7 +1366,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-asic\">${ant_chain_acn}</div>"
 			echo "<div id=\"cbip-table-1-asic\"></div>"
-			echo "</td>"
 			echo "</td>"
 #2014-10-16##################################################################################### 
 ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
@@ -1433,8 +1394,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn15=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acn16=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan15=}
-			ant_fan=${ant_fan%%,fan16=*}
 		
 			ant_temp=${ant_tmp#*temp15=}
 			ant_temp=${ant_temp%%,temp16=*}
@@ -1450,7 +1409,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-asic\">${ant_chain_acn}</div>"
 			echo "<div id=\"cbip-table-1-asic\"></div>"
-			echo "</td>"
 			echo "</td>"
 #2014-10-16##################################################################################### 
 ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
@@ -1479,9 +1437,7 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		ant_chain_acn=${ant_tmp#*chain_acn16=}
 		ant_chain_acn=${ant_chain_acn%%,chain_acs1=*}
 		if [ -n ${ant_chain_acn} -a ${ant_chain_acn} != "0" ]; then
-			ant_fan=${ant_tmp#*fan16=}
-			ant_fan=${ant_fan%%,temp_num=*}
-		
+
 			ant_temp=${ant_tmp#*temp16=}
 			ant_temp=${ant_temp%%,temp_avg=*}
 		
@@ -1496,7 +1452,6 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 			echo "<td class=\"cbi-value-field\">"
 			echo "<div id=\"cbi-table-1-asic\">${ant_chain_acn}</div>"
 			echo "<div id=\"cbip-table-1-asic\"></div>"
-			echo "</td>"
 			echo "</td>"
 #2014-10-16##################################################################################### 
 ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
@@ -1518,6 +1473,29 @@ ant_freq_split=$(echo $ant_freq| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 		
 		break;
 	done
+ant_fan=${ant_tmp#*fan1=}     
+ant_fan=${ant_fan%%,fan2=*}
+ant_fan1=${ant_fan}
+
+ant_fan=${ant_tmp#*fan2=}   
+ant_fan=${ant_fan%%,fan3=*}
+ant_fan2=${ant_fan}
+
+ant_fan=${ant_tmp#*fan3=}
+ant_fan=${ant_fan%%,fan4=*}
+ant_fan3=${ant_fan}
+
+ant_fan=${ant_tmp#*fan4=}
+ant_fan=${ant_fan%%,fan5=*} 
+ant_fan4=${ant_fan}
+
+ant_fan=${ant_tmp#*fan5=}
+ant_fan=${ant_fan%%,fan6=*} 
+ant_fan5=${ant_fan}
+
+ant_fan=${ant_tmp#*fan6=}
+ant_fan=${ant_fan%%,fan7=*} 
+ant_fan6=${ant_fan}        
 fi
 
 cat <<-EOF
@@ -1531,6 +1509,9 @@ cat <<-EOF
 								<th class="cbi-section-table-cell">Fan2</th>
 								<th class="cbi-section-table-cell">Fan3</th>
 								<th class="cbi-section-table-cell">Fan4</th>
+								<th class="cbi-section-table-cell">Fan5</th>
+								<th class="cbi-section-table-cell">Fan6</th>
+
 							</tr>
 							<tr class="cbi-section-table-row">
 								<th class="cbi-rowstyle-1 cbi-value-field">Speed (r/min)</th>
@@ -1541,11 +1522,15 @@ ant_fan1_split=$(echo $ant_fan1| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 ant_fan2_split=$(echo $ant_fan2| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 ant_fan3_split=$(echo $ant_fan3| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 ant_fan4_split=$(echo $ant_fan4| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
+ant_fan5_split=$(echo $ant_fan5| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
+ant_fan6_split=$(echo $ant_fan6| sed -r ':1;s/(.*[0-9])([0-9]{3})/\1,\2/;t1')
 ###############################################################################################
 echo "<td id=\"ant_fan1\" class=\"cbi-rowstyle-1 cbi-value-field\">${ant_fan1_split}</td>"
 echo "<td id=\"ant_fan2\" class=\"cbi-rowstyle-1 cbi-value-field\">${ant_fan2_split}</td>"
 echo "<td id=\"ant_fan3\" class=\"cbi-rowstyle-1 cbi-value-field\">${ant_fan3_split}</td>"
 echo "<td id=\"ant_fan4\" class=\"cbi-rowstyle-1 cbi-value-field\">${ant_fan4_split}</td>"
+echo "<td id=\"ant_fan5\" class=\"cbi-rowstyle-1 cbi-value-field\">${ant_fan5_split}</td>"
+echo "<td id=\"ant_fan6\" class=\"cbi-rowstyle-1 cbi-value-field\">${ant_fan6_split}</td>"
 
 cat <<-EOT
 							</tr>

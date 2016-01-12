@@ -9,6 +9,7 @@ SRC_URI = "file://initc \
 	file://spitop_noncerev_s5_test.rbf \
 	file://spitop_noncerev_s2.rbf \
 	file://spitop_noncerev_s4p.rbf \
+	file://A8FPGA_1116_3channel.rbf \
 	file://initc.sh \
 	file://initc_emmc_flash.sh \
 	file://eeprom.dump \
@@ -33,8 +34,14 @@ do_install() {
             	install -m 0644 ${S}/spitop_noncerev_s5.rbf ${D}${bindir}/spitop_noncerev.rbf #fpga bin file
             	echo "S5"
 	elif [ x"S5+" == x"${Miner_TYPE}" ]; then
-            	install -m 0644 ${S}/spitop_noncerev_s5_test.rbf ${D}${bindir}/spitop_noncerev.rbf #fpga bin file
-            	echo "S5+"
+		if [ x"chanel3" == x"${chanel}" ]; then
+			install -m 0644 ${S}/A8FPGA_1116_3channel.rbf ${D}${bindir}/spitop_noncerev.rbf #fpga bin file
+			echo "3c" >> ~/Desktop/a.log
+		else
+			echo "9c" >> ~/Desktop/a.log
+            		install -m 0644 ${S}/spitop_noncerev_s5_test.rbf ${D}${bindir}/spitop_noncerev.rbf #fpga bin file
+        	fi
+        	echo "S5+"		
 
 	elif [ x"S2" == x"${Miner_TYPE}" ]; then
             	install -m 0644 ${S}/spitop_noncerev_s2.rbf ${D}${bindir}/spitop_noncerev.rbf #fpga bin file

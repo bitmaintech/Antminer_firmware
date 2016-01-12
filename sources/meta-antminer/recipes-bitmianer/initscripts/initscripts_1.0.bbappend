@@ -45,6 +45,9 @@ do_install_append() {
         install -m 0755 ${WORKDIR}/auto_freq.sh ${D}${base_sbindir}/
 	install -m 0400 ${WORKDIR}/auto_freq.conf ${D}${sysconfdir}/auto_freq.conf.factory
 
+	install -d ${D}${base_sbindir}
+        install -m 0755 ${WORKDIR}/reset.sh ${D}${base_sbindir}/
+
 	install -m 0400 ${WORKDIR}/shadow.factory ${D}${sysconfdir}/shadow.factory
 	if [ x"C1" == x"${Miner_TYPE}" ]; then
 		install -m 0400 ${WORKDIR}/network_c1.conf.factory ${D}${sysconfdir}/network.conf.factory
@@ -84,7 +87,7 @@ do_install_append() {
 	install -d ${D}${bindir}
 	rm -rf ${D}${bindir}/compile_time
 	date > ${D}${bindir}/compile_time
-	echo "Antminer ${Miner_TYPE}" >> ${D}${bindir}/compile_time
+	echo "Antminer S7" >> ${D}${bindir}/compile_time
 }
 
 SRC_URI_append = " file://mountdevtmpfs.sh"
@@ -113,6 +116,7 @@ SRC_URI_append = " file://pgnand.sh"
 
 SRC_URI_append = " file://auto_freq.sh"
 SRC_URI_append = " file://auto_freq.conf"
+SRC_URI_append = " file://reset.sh"
 
 SRC_URI_append = " file://miner-m.sh"
 SRC_URI_append = " file://dataformatconfig"

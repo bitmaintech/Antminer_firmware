@@ -73,7 +73,7 @@ function f_get_miner_conf() {
 	try
 	{
 		document.getElementById("ant_freq").value=ant_data["bitmain-freq"];
-		document.getElementById("ant_voltage").value=ant_data["bitmain-voltage"];
+
 	}
 	catch(err)
 	{
@@ -92,6 +92,9 @@ function f_submit_miner_conf() {
 	_ant_pool3pw = "123";
 	_ant_nobeeper = "false";
 	_ant_notempoverctrl = "false";
+	_ant_fan_customize_switch = "false";
+	_ant_fan_customize_value = "100";
+
 	try
 	{
 		for(var i = 0; i < ant_data.pools.length; i++) {
@@ -123,24 +126,31 @@ function f_submit_miner_conf() {
 		} else {
 			_ant_notempoverctrl = "false";
 		}
+		if(ant_data["bitmain-fan-ctrl"]) {                                                           
+                        _ant_fan_customize_switch = "true";                                                  
+                        _ant_fan_customize_value = ant_data["bitmain-fan-pwm"];                              
+                } else {                                                                                     
+                        _ant_fan_customize_switch = "false";                                                 
+                        _ant_fan_customize_value = "";                                                       
+                }    
 	}
 	catch(err)
 	{
 		alert('Invalid Miner configuration file. Edit manually or reset to default.'+err);
 	}
-	
+
 	_ant_freq=jQuery("#ant_freq").val();
-	_ant_voltage=jQuery("#ant_voltage").val();
-	
+
+
 	jQuery("#cbi_apply_cgminer_fieldset").show();
-	
+
 	jQuery.ajax({
 		url: '/cgi-bin/set_miner_conf.cgi',
 		type: 'POST',
 		dataType: 'json',
 		timeout: 30000,
 		cache: false,
-		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_nobeeper:_ant_nobeeper, _ant_notempoverctrl:_ant_notempoverctrl, _ant_freq:_ant_freq, _ant_voltage:_ant_voltage},
+		data: {_ant_pool1url:_ant_pool1url, _ant_pool1user:_ant_pool1user, _ant_pool1pw:_ant_pool1pw,_ant_pool2url:_ant_pool2url, _ant_pool2user:_ant_pool2user, _ant_pool2pw:_ant_pool2pw,_ant_pool3url:_ant_pool3url, _ant_pool3user:_ant_pool3user, _ant_pool3pw:_ant_pool3pw, _ant_nobeeper:_ant_nobeeper, _ant_notempoverctrl:_ant_notempoverctrl,_ant_fan_customize_switch:_ant_fan_customize_switch,_ant_fan_customize_value:_ant_fan_customize_value, _ant_freq:_ant_freq},
 		success: function(data) {
 			window.location.reload();
 		},

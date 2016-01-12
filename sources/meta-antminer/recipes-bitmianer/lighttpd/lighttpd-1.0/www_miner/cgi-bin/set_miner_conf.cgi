@@ -1,5 +1,5 @@
 #!/bin/sh
-
+#set -x
 
 ant_pool1url=
 ant_pool1user=
@@ -12,9 +12,11 @@ ant_pool3user=
 ant_pool3pw=
 ant_nobeeper=
 ant_notempoverctrl=
+ant_fan_customize_value=
+ant_fan_customize_switch=
 ant_freq=
-ant_voltage=
-ant_frequency_auto=""
+ant_voltage=0706
+
 
 ant_input=`cat /dev/stdin`
 ant_tmp=${ant_input//&/ }
@@ -79,62 +81,59 @@ do
 		ant_notempoverctrl=${ant_var/_ant_notempoverctrl=/}
 		;;
 		11 )
-		ant_freq=${ant_var/_ant_freq=/}
+		ant_fan_customize_switch=${ant_var/_ant_fan_customize_switch=/}
 		;;
 		12 )
-		ant_voltage=${ant_var/_ant_voltage=/}
+		ant_fan_customize_value=${ant_var/_ant_fan_customize_value=/}
 		;;
 		13 )
-		ant_frequency_auto=${ant_var/_ant_frequency_auto=/}
+		ant_freq=${ant_var/_ant_freq=/}
 		;;
 	esac
 	i=`expr $i + 1`
 done
-if [ "${ant_frequency_auto}" != "" ]; then
-	echo "{"												> /config/auto_freq.conf
-	echo "\"ant_frequency_auto\" : \"${ant_frequency_auto}\""				>> /config/auto_freq.conf
-	echo "}"												>> /config/auto_freq.conf
-fi
-echo "{"													>  /config/cgminer.conf
-echo "\"pools\" : ["										>> /config/cgminer.conf
-echo "{"													>> /config/cgminer.conf
+
+echo "{"									>  /config/cgminer.conf
+echo "\"pools\" : ["								>> /config/cgminer.conf
+echo "{"									>> /config/cgminer.conf
 echo "\"url\" : \"${ant_pool1url}\","						>> /config/cgminer.conf
 echo "\"user\" : \"${ant_pool1user}\","						>> /config/cgminer.conf
 echo "\"pass\" : \"${ant_pool1pw}\""						>> /config/cgminer.conf
-echo "},"													>> /config/cgminer.conf
-echo "{"													>> /config/cgminer.conf
+echo "},"									>> /config/cgminer.conf
+echo "{"									>> /config/cgminer.conf
 echo "\"url\" : \"${ant_pool2url}\","						>> /config/cgminer.conf
 echo "\"user\" : \"${ant_pool2user}\","						>> /config/cgminer.conf
 echo "\"pass\" : \"${ant_pool2pw}\""						>> /config/cgminer.conf
-echo "},"													>> /config/cgminer.conf
-echo "{"													>> /config/cgminer.conf
+echo "},"									>> /config/cgminer.conf
+echo "{"									>> /config/cgminer.conf
 echo "\"url\" : \"${ant_pool3url}\","						>> /config/cgminer.conf
 echo "\"user\" : \"${ant_pool3user}\","						>> /config/cgminer.conf
 echo "\"pass\" : \"${ant_pool3pw}\""						>> /config/cgminer.conf
-echo "}"													>> /config/cgminer.conf
-echo "]"													>> /config/cgminer.conf
-echo ","													>> /config/cgminer.conf
-echo "\"api-listen\" : "true","								>> /config/cgminer.conf
-echo "\"api-network\" : "true","								>> /config/cgminer.conf
-echo "\"api-allow\" : \"W:0/0\","							>> /config/cgminer.conf
+echo "}"									>> /config/cgminer.conf
+echo "]"									>> /config/cgminer.conf
+echo ","									>> /config/cgminer.conf
+echo "\"api-listen\" : "true","							>> /config/cgminer.conf
+echo "\"api-network\" : "true","						>> /config/cgminer.conf
+echo "\"api-allow\" : \"W:0/0\","						>> /config/cgminer.conf
 if [ "${ant_nobeeper}" = "true" ]; then
-	echo "\"bitmain-nobeeper\" : "true","						>> /config/cgminer.conf
+	echo "\"bitmain-nobeeper\" : "true","					>> /config/cgminer.conf
 fi
 if [ "${ant_notempoverctrl}" = "true" ]; then
 	echo "\"bitmain-notempoverctrl\" : "true","				>> /config/cgminer.conf
 fi
 
-echo "\"bitmain-freq\" : \"${ant_freq}\","					>> /config/cgminer.conf
+if [ "${ant_fan_customize_switch}" = "true" ]; then
+	echo "\"bitmain-fan-ctrl\" : "true","				>> /config/cgminer.conf
+	echo "\"bitmain-fan-pwm\" : \"${ant_fan_customize_value}\","	>> /config/cgminer.conf
+
+fi
+echo "\"bitmain-use-vil\" : "true","				>> /config/cgminer.conf
+echo "\"bitmain-freq\" : \"${ant_freq}\","				>> /config/cgminer.conf
 echo "\"bitmain-voltage\" : \"${ant_voltage}\""				>> /config/cgminer.conf
-echo "}"													>> /config/cgminer.conf
+echo "}"								>> /config/cgminer.conf
 sync &
 sleep 1s
 
-if [ "${ant_frequency_auto}" = "on" ]; then
-	if [ -f /sbin/auto_freq.sh ]; then
-		/sbin/auto_freq.sh >/dev/null 2>&1 &
-	fi
-fi
 /etc/init.d/cgminer.sh restart >/dev/null 2>&1
 
 sleep 5s
