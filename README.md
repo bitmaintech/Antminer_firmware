@@ -10,7 +10,7 @@ To build a bitmainer miner firmware, first prepare a build machine as per OpenEm
 
 When machine is prepared proceed to prepare the bitmainer firmware build by running
 
-    git clone git@10.11.22.51:antminer/antminer_firmware.git
+    git clone git@github.com:bitmaintech/Antminer_firmware.git
     cd antminer_firmware
     MACHINE=beaglebone ./oebb.sh config beaglebone
 
